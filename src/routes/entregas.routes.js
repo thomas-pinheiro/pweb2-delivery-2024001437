@@ -12,7 +12,7 @@ const router = Router();
 
 router.post('/', validarCriacaoEntrega, controller.criar);
 router.get('/', controller.listarTodos);
-// router.get('/:id', controller.buscarPorId);
+router.get('/:id', controller.buscarPorId);
 // router.get('/:id/historico', controller.obterHistorico);
 // router.patch('/:id/avancar', controller.avancarEntrega);
 // router.patch('/:id/cancelar', controller.cancelarEntrega);

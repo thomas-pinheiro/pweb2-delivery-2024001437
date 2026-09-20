@@ -17,4 +17,8 @@ export class EntregaService {
     async listarTodos() {
         return this.repository.listarTodos();
     };
+
+    async buscarPorId(id) {
+        return this.repository.buscarPorId(id);
+    }
 }

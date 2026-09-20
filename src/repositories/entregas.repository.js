@@ -8,9 +8,9 @@ export class EntregaRepository {
         return this.entregas;
     }
 
-    // async buscarPorId(id) {
-    //     return this.entregas.find((e) => e.id === id) ?? null;
-    // }
+    async buscarPorId(id) {
+        return this.entregas.find((e) => e.id === id) ?? null;
+    }
 
     async criar(dados) {
         const novo = {
