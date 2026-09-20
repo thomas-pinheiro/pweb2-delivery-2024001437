@@ -14,7 +14,7 @@ router.post('/', validarCriacaoEntrega, controller.criar);
 router.get('/', controller.listarTodos);
 router.get('/:id', controller.buscarPorId);
 router.patch('/:id/avancar', controller.avancarEntrega);
-// router.patch('/:id/cancelar', controller.cancelarEntrega);
+router.patch('/:id/cancelar', controller.cancelarEntrega);
 // router.get('/:id/historico', controller.obterHistorico);
 
 export default router;

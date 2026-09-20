@@ -47,4 +47,24 @@ export class EntregaService {
 
         return this.repository.atualizar(entrega);
     }
+
+    async cancelarEntrega(id) {
+        const entrega = await this.repository.buscarPorId(id);
+        if (!entrega) {
+            throw new AppError('Entrega não encontrada', 404);
+        }
+        
+        const statusAtual = entrega.status;
+        if (statusAtual === 'ENTREGUE' || statusAtual === 'CANCELADA') {
+            throw new AppError('Transição inválida', 422);
+        }
+
+        const novoStatus = 'CANCELADA';
+        entrega.status = novoStatus;
+        entrega.historico.push({
+            data: new Date().toISOString(),
+            status: novoStatus
+        });
+        return this.repository.atualizar(entrega);
+    }
 }
