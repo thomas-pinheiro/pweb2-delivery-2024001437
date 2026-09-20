@@ -9,7 +9,7 @@ export class EntregaController {
         this.buscarPorId = this.buscarPorId.bind(this);
         this.avancarEntrega = this.avancarEntrega.bind(this);
         this.cancelarEntrega = this.cancelarEntrega.bind(this);
-        // this.obterHistorico = this.obterHistorico.bind(this);
+        this.obterHistorico = this.obterHistorico.bind(this);
 
     };
 
@@ -66,12 +66,14 @@ export class EntregaController {
         }
     };
 
-    // async obterHistorico(req, res, next) {
-    //     try {
-    //         throw new AppError('Método não implementado', 400);
-    //     } catch (err) {
-    //         next(err);
-    //     }
-    // };
+    async obterHistorico(req, res, next) {
+        try {
+            const { id } = req.params;
+            const entrega = await this.service.buscarPorId(Number(id));
+            res.status(200).json(entrega.historico);
+        } catch (err) {
+            next(err);
+        }
+    };
 };
 
