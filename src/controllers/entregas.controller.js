@@ -5,7 +5,7 @@ export class EntregaController {
         this.service = service;
 
         this.criar = this.criar.bind(this);
-        // this.listarTodos = this.listarTodos.bind(this);
+        this.listarTodos = this.listarTodos.bind(this);
         // this.buscarPorId = this.buscarPorId.bind(this);
         // this.obterHistorico = this.obterHistorico.bind(this);
         // this.avancarEntrega = this.avancarEntrega.bind(this);
@@ -22,13 +22,14 @@ export class EntregaController {
         }
     };
 
-    // async listarTodos(req, res, next) {
-    //     try {
-    //         throw new AppError('Método não implementado', 400);
-    //     } catch (err) {
-    //         next(err);
-    //     }
-    // };
+    async listarTodos(req, res, next) {
+        try {
+            const resultados = await this.service.listarTodos();
+            res.status(200).json(resultados);
+        } catch (err) {
+            next(err);
+        }
+    };
 
     // async buscarPorId(req, res, next) {
     //     try {

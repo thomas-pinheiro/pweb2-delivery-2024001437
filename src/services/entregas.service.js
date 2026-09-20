@@ -10,7 +10,11 @@ export class EntregaService {
 
         const entregaExiste = await this.repository.buscarDuplicada({ descricao, origem, destino });
         if (entregaExiste) throw new AppError('Entrega já cadastrada', 409);
-        
+
         return this.repository.criar({ descricao, origem, destino });
     }
+
+    async listarTodos() {
+        return this.repository.listarTodos();
+    };
 }

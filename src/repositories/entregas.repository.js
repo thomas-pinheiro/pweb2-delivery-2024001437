@@ -4,9 +4,9 @@ export class EntregaRepository {
         this.proximoId = 1;
     }
 
-    // async listarTodos() {
-    //     return this.entregas;
-    // }
+    async listarTodos() {
+        return this.entregas;
+    }
 
     // async buscarPorId(id) {
     //     return this.entregas.find((e) => e.id === id) ?? null;

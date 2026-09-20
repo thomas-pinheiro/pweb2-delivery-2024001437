@@ -11,7 +11,7 @@ const controller = new EntregaController(service);
 const router = Router();
 
 router.post('/', validarCriacaoEntrega, controller.criar);
-// router.get('/', controller.listarTodos);
+router.get('/', controller.listarTodos);
 // router.get('/:id', controller.buscarPorId);
 // router.get('/:id/historico', controller.obterHistorico);
 // router.patch('/:id/avancar', controller.avancarEntrega);
