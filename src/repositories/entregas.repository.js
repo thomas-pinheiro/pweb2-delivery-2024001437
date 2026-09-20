@@ -40,4 +40,13 @@ export class EntregaRepository {
             e.destino === entrega.destino
         ) ?? null;
     }
+
+    async atualizar(entrega) {
+        const index = this.entregas.findIndex((e) => e.id === entrega.id);
+        if (index === -1) {
+            return null;
+        }
+        this.entregas[index] = entrega;
+        return entrega;
+    }
 }
