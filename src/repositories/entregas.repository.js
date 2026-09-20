@@ -4,8 +4,12 @@ export class EntregaRepository {
         this.proximoId = 1;
     }
 
-    async listarTodos() {
-        return this.entregas;
+    async listarTodos({ status }) {
+        if (status) {
+            return this.entregas.filter((e) => e.status === status);
+        } else {
+            return this.entregas;
+        }
     }
 
     async buscarPorId(id) {
