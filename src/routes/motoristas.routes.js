@@ -12,5 +12,6 @@ const router = Router();
 
 router.post('/', validarCriacaoMotorista, controller.criar);
 router.get('/', controller.listarTodos);
+router.get('/:id', controller.buscarPorId);
 
 export default router;

@@ -6,7 +6,18 @@ export class MotoristaController {
 
         this.criar = this.criar.bind(this);
         this.listarTodos = this.listarTodos.bind(this);
+        this.buscarPorId = this.buscarPorId.bind(this);
     };
+
+    async buscarPorId(req, res, next) {
+        try {
+            const { id } = req.params;
+            const motorista = await this.service.buscarPorId(id);
+            res.status(200).json(motorista);
+        } catch (err) {
+            next(err);
+        }
+    }
 
     async criar(req, res, next) {
         try {

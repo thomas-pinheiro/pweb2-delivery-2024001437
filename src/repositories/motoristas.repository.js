@@ -15,9 +15,9 @@ export class MotoristaRepository {
     //     }
     // }
 
-    // async buscarPorId(id) {
-    //     return this.motoristas.find((e) => e.id === id) ?? null;
-    // }
+    async buscarPorId(id) {
+        return this.motoristas.find((e) => e.id === id) ?? null;
+    }
 
     async criar({ nome, cpf, placaVeiculo }) {
         const novo = {
