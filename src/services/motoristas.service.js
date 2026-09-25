@@ -11,4 +11,8 @@ export class MotoristaService {
 
         return this.repository.criar({ nome, cpf, placaVeiculo });
     }
+
+    async listarTodos() {
+        return this.repository.listarTodos();
+    }
 }

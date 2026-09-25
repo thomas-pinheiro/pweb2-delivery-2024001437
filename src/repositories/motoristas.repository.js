@@ -4,6 +4,9 @@ export class MotoristaRepository {
         this.proximoId = 1;
     }
 
+    async listarTodos() {
+        return this.motoristas;
+    }
     // async listarTodos({ status }) {
     //     if (status) {
     //         return this.motoristas.filter((e) => e.status === status);

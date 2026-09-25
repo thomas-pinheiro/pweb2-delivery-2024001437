@@ -11,5 +11,6 @@ const controller = new MotoristaController(service);
 const router = Router();
 
 router.post('/', validarCriacaoMotorista, controller.criar);
+router.get('/', controller.listarTodos);
 
 export default router;

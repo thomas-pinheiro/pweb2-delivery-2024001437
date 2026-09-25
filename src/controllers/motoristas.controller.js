@@ -5,6 +5,7 @@ export class MotoristaController {
         this.service = service;
 
         this.criar = this.criar.bind(this);
+        this.listarTodos = this.listarTodos.bind(this);
     };
 
     async criar(req, res, next) {
@@ -16,5 +17,14 @@ export class MotoristaController {
             next(err);
         }
     };
+
+    async listarTodos(req, res, next) {
+        try {
+            const motoristas = await this.service.listarTodos();
+            res.status(200).json(motoristas)
+        } catch (err) {
+            next(err);
+        }
+    }
 };
 
