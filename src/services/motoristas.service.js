@@ -17,6 +17,10 @@ export class MotoristaService {
     }
 
     async buscarPorId(id) {
-        return this.repository.buscarPorId(id);
+        const motorista = await this.repository.buscarPorId(Number(id));
+        if (!motorista) {
+            throw new AppError('Motorista não encontrado', 404);
+        }
+        return motorista;
     }
 }
