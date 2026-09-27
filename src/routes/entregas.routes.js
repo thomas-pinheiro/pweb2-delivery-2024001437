@@ -1,20 +1,16 @@
 import Router from 'express';
-import { EntregaController } from '../controllers/entregas.controller.js';
-import { EntregaService } from '../services/entregas.service.js';
-import { EntregaRepository } from '../repositories/entregas.repository.js';
+import { entregaController } from '../factories/entregas.factory.js';
 import { validarCriacaoEntrega } from '../middlewares/validarCriacaoEntrega.middleware.js';
-
-const repository = new EntregaRepository();
-const service = new EntregaService(repository);
-const controller = new EntregaController(service);
 
 const router = Router();
 
-router.post('/', validarCriacaoEntrega, controller.criar);
-router.get('/', controller.listarTodos);
-router.get('/:id', controller.buscarPorId);
-router.patch('/:id/avancar', controller.avancarEntrega);
-router.patch('/:id/cancelar', controller.cancelarEntrega);
-router.get('/:id/historico', controller.obterHistorico);
+router.post('/', validarCriacaoEntrega, entregaController.criar);
+router.get('/', entregaController.listarTodos);
+router.get('/:id', entregaController.buscarPorId);
+router.patch('/:id/avancar', entregaController.avancarEntrega);
+router.patch('/:id/cancelar', entregaController.cancelarEntrega);
+router.get('/:id/historico', entregaController.obterHistorico);
+router.patch('/:id/atribuir', entregaController.atribuirEntrega);
+
 
 export default router;
