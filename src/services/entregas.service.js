@@ -1,8 +1,9 @@
 import { AppError } from '../utils/AppError.js';
 
 export class EntregaService {
-    constructor(repository) {
+    constructor(repository, motoristaService) {
         this.repository = repository;
+        this.motoristaService = motoristaService;
     }
 
     async criar({ descricao, origem, destino }) {
@@ -51,7 +52,7 @@ export class EntregaService {
 
     async cancelarEntrega(id) {
         const entrega = await this.buscarPorId(id);
-        
+
         const statusAtual = entrega.status;
         if (statusAtual === 'ENTREGUE' || statusAtual === 'CANCELADA') {
             throw new AppError('Transição inválida', 422);
@@ -62,6 +63,22 @@ export class EntregaService {
         entrega.historico.push({
             data: new Date().toISOString(),
             status: novoStatus
+        });
+        return this.repository.atualizar(entrega);
+    }
+
+    async atribuirEntrega(id, motoristaId) {
+        const entrega = await this.buscarPorId(id);
+        const motorista = await this.motoristaService.buscarPorId(motoristaId);
+
+        if (entrega.status !== 'CRIADA') {
+            throw new AppError('Entrega não pode ser atribuída', 422);
+        }
+
+        entrega.motoristaId = motorista.id;
+        entrega.historico.push({
+            data: new Date().toISOString(),
+            status: 'ATRIBUIDA'
         });
         return this.repository.atualizar(entrega);
     }

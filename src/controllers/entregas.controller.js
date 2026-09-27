@@ -10,7 +10,7 @@ export class EntregaController {
         this.avancarEntrega = this.avancarEntrega.bind(this);
         this.cancelarEntrega = this.cancelarEntrega.bind(this);
         this.obterHistorico = this.obterHistorico.bind(this);
-
+        this.atribuirEntrega = this.atribuirEntrega.bind(this);
     };
 
     async criar(req, res, next) {
@@ -72,5 +72,16 @@ export class EntregaController {
             next(err);
         }
     };
+
+    async atribuirEntrega(req, res, next) {
+        try {
+            const { id } = req.params;
+            const { motoristaId } = req.body;
+            const entrega = await this.service.atribuirEntrega(id, motoristaId);
+            res.status(200).json(entrega);
+        } catch (err) {
+            next(err);
+        }
+    }
 };
 
