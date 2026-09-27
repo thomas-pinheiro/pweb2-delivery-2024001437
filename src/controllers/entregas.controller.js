@@ -36,10 +36,7 @@ export class EntregaController {
     async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
-            const entrega = await this.service.buscarPorId(Number(id));
-            if (!entrega) {
-                throw new AppError('Entrega não encontrada', 404);
-            }
+            const entrega = await this.service.buscarPorId(id);
             res.status(200).json(entrega);
         } catch (err) {
             next(err);
@@ -49,7 +46,7 @@ export class EntregaController {
     async avancarEntrega(req, res, next) {
         try {
             const { id } = req.params;
-            const entrega = await this.service.avancarEntrega(Number(id));
+            const entrega = await this.service.avancarEntrega(id);
             res.status(200).json(entrega);
         } catch (err) {
             next(err);
@@ -59,7 +56,7 @@ export class EntregaController {
     async cancelarEntrega(req, res, next) {
         try {
             const { id } = req.params;
-            const entrega = await this.service.cancelarEntrega(Number(id));
+            const entrega = await this.service.cancelarEntrega(id);
             res.status(200).json(entrega);
         } catch (err) {
             next(err);
@@ -69,7 +66,7 @@ export class EntregaController {
     async obterHistorico(req, res, next) {
         try {
             const { id } = req.params;
-            const entrega = await this.service.buscarPorId(Number(id));
+            const entrega = await this.service.buscarPorId(id);
             res.status(200).json(entrega.historico);
         } catch (err) {
             next(err);

@@ -19,11 +19,15 @@ export class EntregaService {
     };
 
     async buscarPorId(id) {
-        return this.repository.buscarPorId(id);
+        const entrega = await this.repository.buscarPorId(Number(id));
+        if (!entrega) {
+            throw new AppError('Entrega não encontrada', 404);
+        }
+        return entrega;
     }
 
     async avancarEntrega(id) {
-        const entrega = await this.repository.buscarPorId(id);
+        const entrega = await this.repository.buscarPorId(Number(id));
         if (!entrega) {
             throw new AppError('Entrega não encontrada', 404);
         }
@@ -49,7 +53,7 @@ export class EntregaService {
     }
 
     async cancelarEntrega(id) {
-        const entrega = await this.repository.buscarPorId(id);
+        const entrega = await this.repository.buscarPorId(Number(id));
         if (!entrega) {
             throw new AppError('Entrega não encontrada', 404);
         }
