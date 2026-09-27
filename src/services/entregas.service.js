@@ -27,10 +27,7 @@ export class EntregaService {
     }
 
     async avancarEntrega(id) {
-        const entrega = await this.repository.buscarPorId(Number(id));
-        if (!entrega) {
-            throw new AppError('Entrega não encontrada', 404);
-        }
+        const entrega = await this.buscarPorId(id);
         const statusAtual = entrega.status;
         let novoStatus;
         switch (statusAtual) {
@@ -53,10 +50,7 @@ export class EntregaService {
     }
 
     async cancelarEntrega(id) {
-        const entrega = await this.repository.buscarPorId(Number(id));
-        if (!entrega) {
-            throw new AppError('Entrega não encontrada', 404);
-        }
+        const entrega = await this.buscarPorId(id);
         
         const statusAtual = entrega.status;
         if (statusAtual === 'ENTREGUE' || statusAtual === 'CANCELADA') {
