@@ -49,4 +49,8 @@ export class EntregaRepository {
         this.entregas[index] = entrega;
         return entrega;
     }
+
+    async listarEntregasPorMotorista(motoristaId) {
+        return this.entregas.filter((e) => e.motoristaId === motoristaId) || [];
+    }
 }

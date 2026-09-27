@@ -82,4 +82,10 @@ export class EntregaService {
         });
         return this.repository.atualizar(entrega);
     }
+
+    async listarEntregasPorMotorista(motoristaId) {
+        const motorista = await this.motoristaService.buscarPorId(motoristaId);
+        const entregas = await this.repository.listarEntregasPorMotorista(motorista.id);
+        return entregas;
+    }
 }
