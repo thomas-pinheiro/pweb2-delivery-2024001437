@@ -1,5 +1,3 @@
-import { AppError } from '../utils/AppError.js';
-
 export class EntregaController {
     constructor(service) {
         this.service = service;
@@ -11,7 +9,6 @@ export class EntregaController {
         this.cancelarEntrega = this.cancelarEntrega.bind(this);
         this.obterHistorico = this.obterHistorico.bind(this);
         this.atribuirEntrega = this.atribuirEntrega.bind(this);
-        this.listarEntregasPorMotorista = this.listarEntregasPorMotorista.bind(this);
     };
 
     async criar(req, res, next) {
@@ -84,15 +81,4 @@ export class EntregaController {
             next(err);
         }
     }
-
-    async listarEntregasPorMotorista(req, res, next) {
-        try {
-            const { id } = req.params;
-            const entregas = await this.service.listarEntregasPorMotorista(id);
-            res.status(200).json(entregas);
-        } catch (err) {
-            next(err);
-        }
-    }
 };
-

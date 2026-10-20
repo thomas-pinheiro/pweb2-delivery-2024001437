@@ -1,9 +1,9 @@
 import { AppError } from '../utils/AppError.js';
 
 export class EntregaService {
-    constructor(repository, motoristaService) {
-        this.repository = repository;
-        this.motoristaService = motoristaService;
+    constructor(entregasRepository, motoristasRepository) {
+        this.repository = entregasRepository;
+        this.motoristasRepository = motoristasRepository;
     }
 
     async criar({ descricao, origem, destino }) {
@@ -69,7 +69,10 @@ export class EntregaService {
 
     async atribuirEntrega(id, motoristaId) {
         const entrega = await this.buscarPorId(id);
-        const motorista = await this.motoristaService.buscarPorId(motoristaId);
+        const motorista = await this.motoristasRepository.buscarPorId(Number(motoristaId));
+        if (!motorista) {
+            throw new AppError('Motorista não encontrado', 404);
+        }
 
         if (entrega.status !== 'CRIADA') {
             throw new AppError('Entrega não pode ser atribuída', 422);
@@ -81,11 +84,5 @@ export class EntregaService {
             status: 'ATRIBUIDA'
         });
         return this.repository.atualizar(entrega);
-    }
-
-    async listarEntregasPorMotorista(motoristaId) {
-        const motorista = await this.motoristaService.buscarPorId(motoristaId);
-        const entregas = await this.repository.listarEntregasPorMotorista(motorista.id);
-        return entregas;
     }
 }

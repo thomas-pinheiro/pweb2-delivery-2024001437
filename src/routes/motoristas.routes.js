@@ -1,13 +1,13 @@
 import Router from 'express';
-import { motoristaController } from '../factories/motoristas.factory.js';
-import { entregaController } from '../factories/entregas.factory.js';
 import { validarCriacaoMotorista } from '../middlewares/validarCriacaoMotorista.middleware.js';
 
-const router = Router();
+export function criarMotoristasRouter(motoristaController) {
+    const router = Router();
 
-router.post('/', validarCriacaoMotorista, motoristaController.criar);
-router.get('/', motoristaController.listarTodos);
-router.get('/:id', motoristaController.buscarPorId);
-router.get('/:id/entregas', entregaController.listarEntregasPorMotorista);
+    router.post('/', validarCriacaoMotorista, motoristaController.criar);
+    router.get('/', motoristaController.listarTodos);
+    router.get('/:id', motoristaController.buscarPorId);
+    router.get('/:id/entregas', motoristaController.listarEntregas);
 
-export default router;
+    return router;
+}

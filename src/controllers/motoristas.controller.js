@@ -1,5 +1,3 @@
-import { AppError } from '../utils/AppError.js';
-
 export class MotoristaController {
     constructor(service) {
         this.service = service;
@@ -7,6 +5,7 @@ export class MotoristaController {
         this.criar = this.criar.bind(this);
         this.listarTodos = this.listarTodos.bind(this);
         this.buscarPorId = this.buscarPorId.bind(this);
+        this.listarEntregas = this.listarEntregas.bind(this);
     };
 
     async buscarPorId(req, res, next) {
@@ -37,5 +36,14 @@ export class MotoristaController {
             next(err);
         }
     }
-};
 
+    async listarEntregas(req, res, next) {
+        try {
+            const { id } = req.params;
+            const entregas = await this.service.listarEntregas(id);
+            res.status(200).json(entregas);
+        } catch (err) {
+            next(err);
+        }
+    }
+};
