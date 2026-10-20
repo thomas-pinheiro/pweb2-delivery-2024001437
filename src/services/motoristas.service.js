@@ -1,15 +1,30 @@
 import { AppError } from '../utils/AppError.js';
 
+/** @typedef {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} IMotoristasRepository */
+/** @typedef {import('../repositories/contratos/IMotoristasRepository.js').Motorista} Motorista */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} IEntregasRepository */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').Entrega} Entrega */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} FiltrosEntrega */
+
+/**
+ * Regras de negócio de Motoristas: cadastro, consulta e entregas atribuídas.
+ */
 export class MotoristaService {
     /**
-     * @param {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} motoristasRepository
-     * @param {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} entregasRepository
+     * @param {IMotoristasRepository} motoristasRepository
+     * @param {IEntregasRepository} entregasRepository Usado para listar as entregas de um motorista.
      */
     constructor(motoristasRepository, entregasRepository) {
         this.repository = motoristasRepository;
         this.entregasRepository = entregasRepository;
     }
 
+    /**
+     * Cadastra um motorista com status `ATIVO`.
+     * @param {{ nome: string, cpf: string, placaVeiculo?: string }} dados
+     * @returns {Promise<Motorista>}
+     * @throws {AppError} 409 se o CPF já estiver cadastrado.
+     */
     async criar({ nome, cpf, placaVeiculo }) {
         const motoristaExiste = await this.repository.buscarPorCpf(cpf);
         if (motoristaExiste) throw new AppError('Motorista com CPF já cadastrado', 409);
@@ -17,10 +32,20 @@ export class MotoristaService {
         return this.repository.criar({ nome, cpf, placaVeiculo });
     }
 
+    /**
+     * Lista todos os motoristas.
+     * @returns {Promise<Motorista[]>}
+     */
     async listarTodos() {
         return this.repository.listarTodos();
     }
 
+    /**
+     * Busca um motorista pelo id.
+     * @param {number | string} id
+     * @returns {Promise<Motorista>}
+     * @throws {AppError} 404 se o motorista não existir.
+     */
     async buscarPorId(id) {
         const motorista = await this.repository.buscarPorId(Number(id));
         if (!motorista) {
@@ -30,8 +55,11 @@ export class MotoristaService {
     }
 
     /**
-     * @param {number | string} id
-     * @param {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} [filtros]
+     * Lista as entregas atribuídas ao motorista, opcionalmente filtradas por status.
+     * @param {number | string} id Id do motorista.
+     * @param {Pick<FiltrosEntrega, 'status'>} [filtros]
+     * @returns {Promise<Entrega[]>}
+     * @throws {AppError} 404 se o motorista não existir.
      */
     async listarEntregas(id, { status } = {}) {
         const motorista = await this.buscarPorId(id);

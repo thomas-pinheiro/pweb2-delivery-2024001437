@@ -1,15 +1,32 @@
 import { AppError } from '../utils/AppError.js';
 
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} IEntregasRepository */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').Entrega} Entrega */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').StatusEntrega} StatusEntrega */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} FiltrosEntrega */
+/** @typedef {import('../repositories/contratos/IEntregasRepository.js').EventoHistorico} EventoHistorico */
+/** @typedef {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} IMotoristasRepository */
+
+/**
+ * Regras de negócio de Entregas: criação, ciclo de status e atribuição a motorista.
+ */
 export class EntregaService {
     /**
-     * @param {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} entregasRepository
-     * @param {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} motoristasRepository
+     * @param {IEntregasRepository} entregasRepository
+     * @param {IMotoristasRepository} motoristasRepository Usado para validar o motorista na atribuição.
      */
     constructor(entregasRepository, motoristasRepository) {
         this.repository = entregasRepository;
         this.motoristasRepository = motoristasRepository;
     }
 
+    /**
+     * Cria uma entrega com status `CRIADA`.
+     * @param {{ descricao: string, origem: string, destino: string }} dados
+     * @returns {Promise<Entrega>}
+     * @throws {AppError} 400 se origem e destino forem iguais.
+     * @throws {AppError} 409 se já existir entrega com a mesma descrição, origem e destino.
+     */
     async criar({ descricao, origem, destino }) {
         if (origem === destino) throw new AppError('Origem e destino não podem ser iguais', 400);
 
@@ -24,11 +41,21 @@ export class EntregaService {
         return this.repository.criar({ descricao, origem, destino });
     }
 
-    /** @param {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} [filtros] */
+    /**
+     * Lista as entregas, opcionalmente filtradas por status.
+     * @param {Pick<FiltrosEntrega, 'status'>} [filtros]
+     * @returns {Promise<Entrega[]>}
+     */
     async listarTodos({ status } = {}) {
         return this.repository.listarTodos({ status });
     };
 
+    /**
+     * Busca uma entrega pelo id.
+     * @param {number | string} id
+     * @returns {Promise<Entrega>}
+     * @throws {AppError} 404 se a entrega não existir.
+     */
     async buscarPorId(id) {
         const entrega = await this.repository.buscarPorId(Number(id));
         if (!entrega) {
@@ -37,10 +64,17 @@ export class EntregaService {
         return entrega;
     }
 
+    /**
+     * Avança o status da entrega (`CRIADA → EM_TRANSITO → ENTREGUE`) e registra no histórico.
+     * @param {number | string} id
+     * @returns {Promise<Entrega>}
+     * @throws {AppError} 404 se a entrega não existir.
+     * @throws {AppError} 422 se a entrega já estiver `ENTREGUE` ou `CANCELADA`.
+     */
     async avancarEntrega(id) {
         const entrega = await this.buscarPorId(id);
         const statusAtual = entrega.status;
-        /** @type {import('../repositories/contratos/IEntregasRepository.js').StatusEntrega} */
+        /** @type {StatusEntrega} */
         let novoStatus;
         switch (statusAtual) {
             case 'CRIADA':
@@ -59,6 +93,13 @@ export class EntregaService {
         });
     }
 
+    /**
+     * Cancela a entrega e registra no histórico.
+     * @param {number | string} id
+     * @returns {Promise<Entrega>}
+     * @throws {AppError} 404 se a entrega não existir.
+     * @throws {AppError} 422 se a entrega já estiver `ENTREGUE` ou `CANCELADA`.
+     */
     async cancelarEntrega(id) {
         const entrega = await this.buscarPorId(id);
 
@@ -74,6 +115,14 @@ export class EntregaService {
         });
     }
 
+    /**
+     * Atribui a entrega a um motorista e registra o evento `ATRIBUIDA` no histórico.
+     * @param {number | string} id Id da entrega.
+     * @param {number | string} motoristaId
+     * @returns {Promise<Entrega>} A entrega com `motoristaId` preenchido.
+     * @throws {AppError} 404 se a entrega ou o motorista não existirem.
+     * @throws {AppError} 422 se a entrega não estiver `CRIADA` ou o motorista não estiver `ATIVO`.
+     */
     async atribuirEntrega(id, motoristaId) {
         const entrega = await this.buscarPorId(id);
         const motorista = await this.motoristasRepository.buscarPorId(Number(motoristaId));
@@ -95,6 +144,11 @@ export class EntregaService {
         });
     }
 
+    /**
+     * Monta um evento de histórico com a data atual.
+     * @param {string} status
+     * @returns {EventoHistorico}
+     */
     #evento(status) {
         return { data: new Date().toISOString(), status };
     }
