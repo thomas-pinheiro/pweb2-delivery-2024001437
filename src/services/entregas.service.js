@@ -1,11 +1,7 @@
 import { AppError } from '../utils/AppError.js';
 
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} IEntregasRepository */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').Entrega} Entrega */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').StatusEntrega} StatusEntrega */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} FiltrosEntrega */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').EventoHistorico} EventoHistorico */
-/** @typedef {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} IMotoristasRepository */
+/** @import { IEntregasRepository, Entrega, StatusEntrega, FiltrosEntrega, EventoHistorico } from '../repositories/contratos/IEntregasRepository.js' */
+/** @import { IMotoristasRepository } from '../repositories/contratos/IMotoristasRepository.js' */
 
 /**
  * Regras de negócio de Entregas: criação, ciclo de status e atribuição a motorista.

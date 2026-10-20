@@ -1,11 +1,12 @@
-/** @typedef {import('./contratos/IMotoristasRepository.js').IMotoristasRepository} IMotoristasRepository */
+/** @import { IMotoristasRepository, Motorista } from './contratos/IMotoristasRepository.js' */
+/** @import { Database } from '../database/database.js' */
 
 /**
  * Implementação em memória de {@link IMotoristasRepository}.
  * @implements {IMotoristasRepository}
  */
 export class MotoristaRepository {
-    /** @param {import('../database/database.js').Database} database */
+    /** @param {Database} database */
     constructor(database) {
         this.database = database;
     }
@@ -23,7 +24,7 @@ export class MotoristaRepository {
     }
 
     async criar({ nome, cpf, placaVeiculo }) {
-        /** @type {import('./contratos/IMotoristasRepository.js').Motorista} */
+        /** @type {Motorista} */
         const novo = {
             id: this.database.proximoId('motoristas'),
             nome,

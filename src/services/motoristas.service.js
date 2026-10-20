@@ -1,10 +1,7 @@
 import { AppError } from '../utils/AppError.js';
 
-/** @typedef {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} IMotoristasRepository */
-/** @typedef {import('../repositories/contratos/IMotoristasRepository.js').Motorista} Motorista */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} IEntregasRepository */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').Entrega} Entrega */
-/** @typedef {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} FiltrosEntrega */
+/** @import { IMotoristasRepository, Motorista } from '../repositories/contratos/IMotoristasRepository.js' */
+/** @import { IEntregasRepository, Entrega, FiltrosEntrega } from '../repositories/contratos/IEntregasRepository.js' */
 
 /**
  * Regras de negócio de Motoristas: cadastro, consulta e entregas atribuídas.

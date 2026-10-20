@@ -1,11 +1,12 @@
-/** @typedef {import('./contratos/IEntregasRepository.js').IEntregasRepository} IEntregasRepository */
+/** @import { IEntregasRepository, Entrega } from './contratos/IEntregasRepository.js' */
+/** @import { Database } from '../database/database.js' */
 
 /**
  * Implementação em memória de {@link IEntregasRepository}.
  * @implements {IEntregasRepository}
  */
 export class EntregaRepository {
-    /** @param {import('../database/database.js').Database} database */
+    /** @param {Database} database */
     constructor(database) {
         this.database = database;
     }
@@ -23,7 +24,7 @@ export class EntregaRepository {
     }
 
     async criar({ descricao, origem, destino }) {
-        /** @type {import('./contratos/IEntregasRepository.js').Entrega} */
+        /** @type {Entrega} */
         const novo = {
             id: this.database.proximoId('entregas'),
             descricao,
