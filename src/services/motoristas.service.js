@@ -2,8 +2,8 @@ import { AppError } from '../utils/AppError.js';
 
 export class MotoristaService {
     /**
-     * @param {import('../repositories/motoristas.repository.js').IMotoristasRepository} motoristasRepository
-     * @param {import('../repositories/entregas.repository.js').IEntregasRepository} entregasRepository
+     * @param {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} motoristasRepository
+     * @param {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} entregasRepository
      */
     constructor(motoristasRepository, entregasRepository) {
         this.repository = motoristasRepository;
@@ -29,6 +29,10 @@ export class MotoristaService {
         return motorista;
     }
 
+    /**
+     * @param {number | string} id
+     * @param {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} [filtros]
+     */
     async listarEntregas(id, { status } = {}) {
         const motorista = await this.buscarPorId(id);
         return this.entregasRepository.listarTodos({ motoristaId: motorista.id, status });

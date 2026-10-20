@@ -2,8 +2,8 @@ import { AppError } from '../utils/AppError.js';
 
 export class EntregaService {
     /**
-     * @param {import('../repositories/entregas.repository.js').IEntregasRepository} entregasRepository
-     * @param {import('../repositories/motoristas.repository.js').IMotoristasRepository} motoristasRepository
+     * @param {import('../repositories/contratos/IEntregasRepository.js').IEntregasRepository} entregasRepository
+     * @param {import('../repositories/contratos/IMotoristasRepository.js').IMotoristasRepository} motoristasRepository
      */
     constructor(entregasRepository, motoristasRepository) {
         this.repository = entregasRepository;
@@ -24,6 +24,7 @@ export class EntregaService {
         return this.repository.criar({ descricao, origem, destino });
     }
 
+    /** @param {import('../repositories/contratos/IEntregasRepository.js').FiltrosEntrega} [filtros] */
     async listarTodos({ status } = {}) {
         return this.repository.listarTodos({ status });
     };
@@ -39,6 +40,7 @@ export class EntregaService {
     async avancarEntrega(id) {
         const entrega = await this.buscarPorId(id);
         const statusAtual = entrega.status;
+        /** @type {import('../repositories/contratos/IEntregasRepository.js').StatusEntrega} */
         let novoStatus;
         switch (statusAtual) {
             case 'CRIADA':

@@ -65,7 +65,7 @@ src/
 Todas as instâncias são criadas num único ponto — o composition root em
 `src/routes/index.js`. Services e controllers nunca fazem `new` de suas dependências;
 os services dependem apenas dos contratos `IEntregasRepository` e `IMotoristasRepository`
-(documentados em JSDoc nos arquivos de `src/repositories/`).
+(documentados em JSDoc em `src/repositories/contratos/`).
 
 ```
                          src/routes/index.js  (composition root)
