@@ -1,46 +1,62 @@
+/**
+ * @typedef {'ATIVO' | 'INATIVO'} StatusMotorista
+ */
+
+/**
+ * @typedef {Object} Motorista
+ * @property {number} id
+ * @property {string} nome
+ * @property {string} cpf            Único entre os motoristas.
+ * @property {string} [placaVeiculo]
+ * @property {StatusMotorista} status
+ */
+
+/**
+ * Contrato do repository de Motoristas. Os services dependem APENAS destes métodos;
+ * qualquer implementação (memória, banco, Mock) que os respeite pode ser injetada.
+ *
+ * @typedef {Object} IMotoristasRepository
+ * @property {() => Promise<Motorista[]>} listarTodos
+ *   Lista todos os motoristas.
+ * @property {(id: number) => Promise<Motorista | null>} buscarPorId
+ *   Busca um motorista pelo id; `null` se não existir.
+ * @property {(cpf: string) => Promise<Motorista | null>} buscarPorCpf
+ *   Busca um motorista pelo CPF; `null` se não existir.
+ * @property {(dados: { nome: string, cpf: string, placaVeiculo?: string }) => Promise<Motorista>} criar
+ *   Persiste um novo motorista com status `ATIVO`.
+ */
+
+/**
+ * Implementação em memória de {@link IMotoristasRepository}.
+ * @implements {IMotoristasRepository}
+ */
 export class MotoristaRepository {
-    constructor() {
-        this.motoristas = [];
-        this.proximoId = 1;
+    /** @param {import('../database/database.js').Database} database */
+    constructor(database) {
+        this.database = database;
     }
 
     async listarTodos() {
-        return this.motoristas;
+        return this.database.motoristas;
     }
-    // async listarTodos({ status }) {
-    //     if (status) {
-    //         return this.motoristas.filter((e) => e.status === status);
-    //     } else {
-    //         return this.motoristas;
-    //     }
-    // }
 
     async buscarPorId(id) {
-        return this.motoristas.find((e) => e.id === id) ?? null;
+        return this.database.motoristas.find((m) => m.id === id) ?? null;
+    }
+
+    async buscarPorCpf(cpf) {
+        return this.database.motoristas.find((m) => m.cpf === cpf) ?? null;
     }
 
     async criar({ nome, cpf, placaVeiculo }) {
         const novo = {
-            id: this.proximoId++,
-            nome: nome,
-            cpf: cpf,
-            placaVeiculo: placaVeiculo,
+            id: this.database.proximoId('motoristas'),
+            nome,
+            cpf,
+            placaVeiculo,
             status: 'ATIVO',
         };
-        this.motoristas.push(novo);
+        this.database.motoristas.push(novo);
         return novo;
     }
-
-    async buscarPorCpf(cpf) {
-        return this.motoristas.find((e) => e.cpf === cpf) ?? null;
-    }
-
-    // async atualizar(data) {
-    //     const index = this.motoristas.findIndex((e) => e.id === data.id);
-    //     if (index === -1) {
-    //         return null;
-    //     }
-    //     this.motoristas[index] = data;
-    //     return data;
-    // }
 }

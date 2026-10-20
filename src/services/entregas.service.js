@@ -1,6 +1,10 @@
 import { AppError } from '../utils/AppError.js';
 
 export class EntregaService {
+    /**
+     * @param {import('../repositories/entregas.repository.js').IEntregasRepository} entregasRepository
+     * @param {import('../repositories/motoristas.repository.js').IMotoristasRepository} motoristasRepository
+     */
     constructor(entregasRepository, motoristasRepository) {
         this.repository = entregasRepository;
         this.motoristasRepository = motoristasRepository;
@@ -9,13 +13,18 @@ export class EntregaService {
     async criar({ descricao, origem, destino }) {
         if (origem === destino) throw new AppError('Origem e destino não podem ser iguais', 400);
 
-        const entregaExiste = await this.repository.buscarDuplicada({ descricao, origem, destino });
+        const entregas = await this.repository.listarTodos();
+        const entregaExiste = entregas.some((e) =>
+            e.descricao === descricao &&
+            e.origem === origem &&
+            e.destino === destino
+        );
         if (entregaExiste) throw new AppError('Entrega já cadastrada', 409);
 
         return this.repository.criar({ descricao, origem, destino });
     }
 
-    async listarTodos({ status }) {
+    async listarTodos({ status } = {}) {
         return this.repository.listarTodos({ status });
     };
 
@@ -41,13 +50,11 @@ export class EntregaService {
             default:
                 throw new AppError('Transição inválida', 422);
         }
-        entrega.status = novoStatus;
-        entrega.historico.push({
-            data: new Date().toISOString(),
-            status: novoStatus
-        });
 
-        return this.repository.atualizar(entrega);
+        return this.repository.atualizar(entrega.id, {
+            status: novoStatus,
+            historico: [...entrega.historico, this.#evento(novoStatus)]
+        });
     }
 
     async cancelarEntrega(id) {
@@ -59,12 +66,10 @@ export class EntregaService {
         }
 
         const novoStatus = 'CANCELADA';
-        entrega.status = novoStatus;
-        entrega.historico.push({
-            data: new Date().toISOString(),
-            status: novoStatus
+        return this.repository.atualizar(entrega.id, {
+            status: novoStatus,
+            historico: [...entrega.historico, this.#evento(novoStatus)]
         });
-        return this.repository.atualizar(entrega);
     }
 
     async atribuirEntrega(id, motoristaId) {
@@ -78,11 +83,13 @@ export class EntregaService {
             throw new AppError('Entrega não pode ser atribuída', 422);
         }
 
-        entrega.motoristaId = motorista.id;
-        entrega.historico.push({
-            data: new Date().toISOString(),
-            status: 'ATRIBUIDA'
+        return this.repository.atualizar(entrega.id, {
+            motoristaId: motorista.id,
+            historico: [...entrega.historico, { ...this.#evento('ATRIBUIDA'), motoristaId: motorista.id }]
         });
-        return this.repository.atualizar(entrega);
+    }
+
+    #evento(status) {
+        return { data: new Date().toISOString(), status };
     }
 }
