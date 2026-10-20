@@ -1,4 +1,4 @@
-import Router from 'express';
+import { Router } from 'express';
 import { validarCriacaoEntrega } from '../middlewares/validarCriacaoEntrega.middleware.js';
 import { validarAtribuicaoEntrega } from '../middlewares/validarAtribuicaoEntrega.middleware.js';
 

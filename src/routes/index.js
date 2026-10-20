@@ -1,4 +1,4 @@
-import Router from 'express';
+import { Router } from 'express';
 import { Database } from '../database/database.js';
 import { EntregaRepository } from '../repositories/entregas.repository.js';
 import { MotoristaRepository } from '../repositories/motoristas.repository.js';

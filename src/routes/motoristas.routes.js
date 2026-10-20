@@ -1,4 +1,4 @@
-import Router from 'express';
+import { Router } from 'express';
 import { validarCriacaoMotorista } from '../middlewares/validarCriacaoMotorista.middleware.js';
 
 export function criarMotoristasRouter(motoristaController) {
