@@ -29,8 +29,8 @@ export class MotoristaService {
         return motorista;
     }
 
-    async listarEntregas(id) {
+    async listarEntregas(id, { status } = {}) {
         const motorista = await this.buscarPorId(id);
-        return this.entregasRepository.listarTodos({ motoristaId: motorista.id });
+        return this.entregasRepository.listarTodos({ motoristaId: motorista.id, status });
     }
 }

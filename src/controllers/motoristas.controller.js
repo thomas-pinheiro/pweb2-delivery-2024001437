@@ -40,7 +40,8 @@ export class MotoristaController {
     async listarEntregas(req, res, next) {
         try {
             const { id } = req.params;
-            const entregas = await this.service.listarEntregas(id);
+            const { status } = req.query;
+            const entregas = await this.service.listarEntregas(id, { status });
             res.status(200).json(entregas);
         } catch (err) {
             next(err);
