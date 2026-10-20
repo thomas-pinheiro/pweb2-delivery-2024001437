@@ -94,6 +94,15 @@ os services dependem apenas dos contratos `IEntregasRepository` e `IMotoristasRe
 A regra "motorista `INATIVO` não pode ser atribuído" fica no `EntregasService`, pois é
 regra da atribuição.
 
+## Documentação (JSDoc)
+
+Contratos, services e demais classes são documentados em JSDoc. O HTML gerado fica em
+`docs/` (abra `docs/index.html`). Para regenerar após alterar o código:
+
+```bash
+npm run docs        # TypeDoc — entende a sintaxe de tipos do TypeScript usada no JSDoc
+```
+
 ## Contrato (resumo)
 
 - Base `/api` · JSON · erro `{ "erro": "..." }` · `GET /api/health` → `{ "status": "ok" }`.
