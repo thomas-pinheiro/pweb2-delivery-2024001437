@@ -10,9 +10,11 @@
     "docs": "typedoc --tsconfig jsconfig.json --entryPointStrategy expand --entryPoints src --out docs"
   },
   "dependencies": {
+    "@prisma/client": "^6.19.3",
     "express": "^4.21.2"
   },
   "devDependencies": {
+    "prisma": "^6.19.3",
     "typedoc": "^0.28.20"
   }
 }
