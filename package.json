@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
+    "ejs": "^7.0.2",
     "express": "^4.21.2"
   },
   "devDependencies": {

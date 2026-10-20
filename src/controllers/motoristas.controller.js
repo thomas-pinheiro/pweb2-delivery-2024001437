@@ -12,7 +12,8 @@ export class MotoristaController {
         try {
             const { id } = req.params;
             const motorista = await this.service.buscarPorId(id);
-            res.status(200).json(motorista);
+            // res.status(200).json(motorista);
+            res.render("index", { titulo: "Bem-vindo", mensagem: motorista.nome });
         } catch (err) {
             next(err);
         }

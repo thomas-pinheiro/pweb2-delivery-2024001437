@@ -8,12 +8,19 @@
 import express from 'express';
 import { criarRotas } from './src/routes/index.js';  // <- descomente quando criar as rotas
 import { middlewareDeErros } from './src/middlewares/erros.middleware.js';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url'; 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 app.use(express.json());
 
 // Health check exigido pelo contrato de execução (não remova).
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+app.set("view engine", "ejs");
+app.set("views", join(__dirname, "src/views"));
 
 // TODO: monte aqui o roteador da sua API (composition root em src/routes):
 app.use('/api', criarRotas());
