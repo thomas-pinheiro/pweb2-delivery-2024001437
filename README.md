@@ -43,6 +43,57 @@ src/
 > O critério de **inversão de dependência** é verificado pelo professor **trocando o repository por
 > um Mock** que respeita o contrato — programe contra o contrato desde o início.
 
+## Rotas
+
+| Método | Rota | Corpo | Sucesso | Erros |
+|---|---|---|---|---|
+| GET | `/api/health` | — | `200` `{ status: "ok" }` | — |
+| POST | `/api/entregas` | `{ descricao, origem, destino }` | `201` entrega (`CRIADA`) | `400` · `409` duplicada |
+| GET | `/api/entregas?status=` | — | `200` array | — |
+| GET | `/api/entregas/:id` | — | `200` entrega | `404` |
+| PATCH | `/api/entregas/:id/avancar` | — | `200` entrega | `404` · `422` |
+| PATCH | `/api/entregas/:id/cancelar` | — | `200` entrega | `404` · `422` |
+| GET | `/api/entregas/:id/historico` | — | `200` array de eventos | `404` |
+| PATCH | `/api/entregas/:id/atribuir` | `{ motoristaId }` | `200` entrega (com `motoristaId`) | `400` · `404` · `422` entrega não-`CRIADA` ou motorista `INATIVO` |
+| POST | `/api/motoristas` | `{ nome, cpf, placaVeiculo? }` | `201` motorista (`ATIVO`) | `400` · `409` CPF duplicado |
+| GET | `/api/motoristas` | — | `200` array | — |
+| GET | `/api/motoristas/:id` | — | `200` motorista | `404` |
+| GET | `/api/motoristas/:id/entregas?status=` | — | `200` só as entregas do motorista (filtro combinável) | `404` |
+
+## Composição das dependências
+
+Todas as instâncias são criadas num único ponto — o composition root em
+`src/routes/index.js`. Services e controllers nunca fazem `new` de suas dependências;
+os services dependem apenas dos contratos `IEntregasRepository` e `IMotoristasRepository`
+(documentados em JSDoc nos arquivos de `src/repositories/`).
+
+```
+                         src/routes/index.js  (composition root)
+                                     │
+                              ┌──────┴──────┐
+                              │  Database   │  (memória)
+                              └──────┬──────┘
+                    ┌────────────────┴────────────────┐
+                    ▼                                 ▼
+         EntregasRepository                 MotoristasRepository
+       «IEntregasRepository»              «IMotoristasRepository»
+                    │  ╲                          ╱  │
+                    │    ╲                      ╱    │
+                    │      ╲                  ╱      │
+                    ▼        ╲              ╱        ▼
+            EntregasService    ╲          ╱   MotoristasService
+       (entregasRepo, motoristasRepo)    (motoristasRepo, entregasRepo)
+                    │                                 │
+                    ▼                                 ▼
+           EntregasController               MotoristasController
+                    │                                 │
+                    ▼                                 ▼
+             /api/entregas                     /api/motoristas
+```
+
+A regra "motorista `INATIVO` não pode ser atribuído" fica no `EntregasService`, pois é
+regra da atribuição.
+
 ## Contrato (resumo)
 
 - Base `/api` · JSON · erro `{ "erro": "..." }` · `GET /api/health` → `{ "status": "ok" }`.
