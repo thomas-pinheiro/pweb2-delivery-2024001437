@@ -83,6 +83,10 @@ export class EntregaService {
             throw new AppError('Entrega não pode ser atribuída', 422);
         }
 
+        if (motorista.status !== 'ATIVO') {
+            throw new AppError('Motorista inativo não pode receber entregas', 422);
+        }
+
         return this.repository.atualizar(entrega.id, {
             motoristaId: motorista.id,
             historico: [...entrega.historico, { ...this.#evento('ATRIBUIDA'), motoristaId: motorista.id }]
