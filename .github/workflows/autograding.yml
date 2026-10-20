@@ -11,6 +11,9 @@ permissions:
 jobs:
   autograding:
     runs-on: ubuntu-latest
+    env:
+      # Banco SQLite do CI (o .env não vai para o git). Caminho relativo à pasta prisma/.
+      DATABASE_URL: file:./dev.db
     steps:
       - uses: actions/checkout@v4
 
@@ -20,6 +23,10 @@ jobs:
 
       - name: Instalar dependências
         run: npm install --no-audit --no-fund
+
+      # O Prisma Client é gerado no postinstall; aqui só criamos o banco a partir das migrations.
+      - name: Aplicar migrations
+        run: npx prisma migrate deploy
 
       - name: Subir o servidor
         run: |
