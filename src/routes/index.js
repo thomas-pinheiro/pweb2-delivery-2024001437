@@ -1,7 +1,6 @@
 import { Router } from 'express';
-import { Database } from '../database/database.js';
-import { EntregaRepository } from '../repositories/entregas.repository.js';
-import { MotoristaRepository } from '../repositories/motoristas.repository.js';
+import { EntregasRepositoryPrisma } from '../repositories/entregas.repository.prisma.js';
+import { MotoristasRepositoryPrisma } from '../repositories/motoristas.repository.prisma.js';
 import { EntregaService } from '../services/entregas.service.js';
 import { MotoristaService } from '../services/motoristas.service.js';
 import { EntregaController } from '../controllers/entregas.controller.js';
@@ -11,9 +10,8 @@ import { criarMotoristasRouter } from './motoristas.routes.js';
 
 // Composition root: ÚNICO ponto onde as dependências são instanciadas e injetadas.
 export function criarRotas() {
-    const database = new Database();
-    const entregasRepo = new EntregaRepository(database);
-    const motoristasRepo = new MotoristaRepository(database);
+    const entregasRepo = new EntregasRepositoryPrisma();
+    const motoristasRepo = new MotoristasRepositoryPrisma();
     const entregasService = new EntregaService(entregasRepo, motoristasRepo);
     const motoristasService = new MotoristaService(motoristasRepo, entregasRepo);
     const entregasController = new EntregaController(entregasService);
