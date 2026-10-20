@@ -7,7 +7,8 @@
     "start": "node server.js",
     "dev": "node --watch server.js",
     "check": "node autograder/check.mjs",
-    "docs": "typedoc --tsconfig jsconfig.json --entryPointStrategy expand --entryPoints src --out docs"
+    "docs": "typedoc --tsconfig jsconfig.json --entryPointStrategy expand --entryPoints src --out docs",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
