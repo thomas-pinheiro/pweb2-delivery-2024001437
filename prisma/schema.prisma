@@ -2,11 +2,43 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+model Motorista {
+  id           Int     @id @default(autoincrement())
+  nome         String
+  cpf          String  @unique // RF-01: CPF único no schema
+  placaVeiculo String? // "?" = opcional (pode ser null)
+  status       String  @default("ATIVO") // SQLite não tem enum → String
+
+  entregas Entrega[] // lado "muitos": 1 motorista → N entregas
+}
+
+model Entrega {
+  id        Int    @id @default(autoincrement())
+  descricao String
+  origem    String
+  destino   String
+  status    String @default("CRIADA")
+
+  motoristaId Int? // chave estrangeira (opcional: começa sem motorista)
+  motorista   Motorista? @relation(fields: [motoristaId], references: [id])
+
+  historico Evento[] // 1 entrega → N eventos
+}
+
+model Evento {
+  id          Int      @id @default(autoincrement())
+  data        DateTime @default(now())
+  status      String // CRIADA, EM_TRANSITO, ..., ATRIBUIDA
+  motoristaId Int? // preenchido só no evento ATRIBUIDA
+
+  entregaId Int
+  entrega   Entrega @relation(fields: [entregaId], references: [id], onDelete: Cascade)
 }
