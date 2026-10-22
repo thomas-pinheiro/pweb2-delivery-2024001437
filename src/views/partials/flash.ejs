@@ -1,0 +1,11 @@
+<% if (typeof sucesso !== 'undefined' && sucesso.length) { %>
+    <% sucesso.forEach((msg) => { %>
+        <div class="flash flash-sucesso" role="status"><%= msg %></div>
+    <% }) %>
+<% } %>
+
+<% if (typeof erro !== 'undefined' && erro.length) { %>
+    <% erro.forEach((msg) => { %>
+        <div class="flash flash-erro" role="alert"><%= msg %></div>
+    <% }) %>
+<% } %>
