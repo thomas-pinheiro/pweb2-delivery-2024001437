@@ -64,9 +64,14 @@ export class EntregaController {
     async avancarEntrega(req, res, next) {
         try {
             const { id } = req.params;
-            const entrega = await this.service.avancarEntrega(id);
-            res.status(200).json(entrega);
+            await this.service.avancarEntrega(id);
+            req.flash('sucesso', 'Status avançado.');
+            res.redirect(`/entregas/${id}`);
         } catch (err) {
+            if (err instanceof AppError) {
+                req.flash('erro', err.message);
+                return res.redirect(`/entregas/${id}`);
+            }
             next(err);
         }
     };
@@ -75,8 +80,13 @@ export class EntregaController {
         try {
             const { id } = req.params;
             const entrega = await this.service.cancelarEntrega(id);
-            res.status(200).json(entrega);
+            req.flash('sucesso', 'Entrega cancelada.');
+            res.redirect(`/entregas/${id}`);
         } catch (err) {
+            if (err instanceof AppError) {
+                req.flash('erro', err.message);
+                return res.redirect(`/entregas/${id}`);
+            }
             next(err);
         }
     };
@@ -96,9 +106,14 @@ export class EntregaController {
             const { id } = req.params;
             const { motoristaId } = req.body;
             const entrega = await this.service.atribuirEntrega(id, motoristaId);
-            res.status(200).json(entrega);
+            req.flash('sucesso', 'Motorista atribuído com sucesso.');
+            res.redirect(`/entregas/${id}`);
         } catch (err) {
+            if (err instanceof AppError) {
+                req.flash('erro', err.message);
+                return res.redirect(`/entregas/${id}`);
+            }
             next(err);
         }
-    }
+    };
 };

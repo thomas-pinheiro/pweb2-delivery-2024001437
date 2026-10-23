@@ -1,19 +1,18 @@
-import { AppError } from '../utils/AppError.js';
-
 export const validarAtribuicaoEntrega = (req, res, next) => {
+    const { id } = req.params;
     const { motoristaId } = req.body;
 
-    if (motoristaId === undefined || motoristaId === null) {
-        throw new AppError('motoristaId obrigatório', 400);
+    if (motoristaId === undefined || motoristaId === null || motoristaId === '') {
+        req.flash('erro', 'Selecione um motorista.');
+        return res.redirect(`/entregas/${id}`);
     }
 
-    const id = Number(motoristaId);
-
-    if (!Number.isInteger(id) || id <= 0) {
-        throw new AppError('motoristaId inválido', 400);
+    const idNum = Number(motoristaId);
+    if (!Number.isInteger(idNum) || idNum <= 0) {
+        req.flash('erro', 'Motorista inválido.');
+        return res.redirect(`/entregas/${id}`);
     }
 
-    req.body.motoristaId = id;
-
+    req.body.motoristaId = idNum;
     next();
 };
