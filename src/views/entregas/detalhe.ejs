@@ -1,0 +1,49 @@
+<div class="card">
+  <div class="card-header">
+    <h1><%= entrega.descricao %></h1>
+    <div class="actions" style="display:flex; gap:.75rem; align-items:center; flex-wrap:wrap;">
+        <% if (entrega.status === 'CRIADA' || entrega.status === 'EM_TRANSITO') { %>
+        <form method="POST" action="/entregas/<%= entrega.id %>/avancar?_method=PATCH">
+            <button type="submit" class="btn btn-primary">Avançar status</button>
+        </form>
+        <% } %>
+
+        <% if (entrega.status !== 'ENTREGUE' && entrega.status !== 'CANCELADA') { %>
+        <form method="POST" action="/entregas/<%= entrega.id %>/cancelar?_method=PATCH">
+            <button type="submit" class="btn btn-danger">Cancelar</button>
+        </form>
+        <% } %>
+
+        <% if (entrega.status === 'CRIADA') { %>
+        <form method="POST" action="/entregas/<%= entrega.id %>/atribuir?_method=PATCH">
+            <select name="motoristaId" required>
+            <option value="" disabled selected>Selecione um motorista</option>
+            <% motoristas.forEach(m => { %>
+                <option value="<%= m.id %>"><%= m.nome %></option>
+            <% }); %>
+            </select>
+            <button type="submit" class="btn btn-secondary">Atribuir motorista</button>
+        </form>
+        <% } %>
+    </div>
+</div>
+    <p><b>Detalhes:</b></p>
+    <dl class="details">
+        <dt>Origem</dt><dd><%= entrega.origem %></dd>
+        <dt>Destino</dt><dd><%= entrega.destino %></dd>
+        <dt>Status</dt><dd><%= entrega.status %></dd>
+    </dl>
+
+    <p><b>Histórico:</b></p>
+    <% if (entrega.historico.length === 0) { %>
+    <p class="empty-state">Sem eventos registrados ainda.</p>
+    <% } else { %>
+    <dl class="details">
+        <% entrega.historico.forEach(h => { %>
+        <dt><%= new Date(h.data).toLocaleString().slice(0, 17) %></dt>
+        <dd><%= h.status %></dd>
+        <% }); %>
+    </dl>
+    <% } %>
+    <a href="/entregas" class="btn btn-link">← Voltar</a>
+</div>

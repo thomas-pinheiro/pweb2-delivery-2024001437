@@ -1,8 +1,9 @@
 import { AppError } from '../utils/AppError.js';
 
 export class EntregaController {
-    constructor(service) {
+    constructor(service, motoristasService) {
         this.service = service;
+        this.motoristasService = motoristasService;
 
         this.criar = this.criar.bind(this);
         this.listarTodos = this.listarTodos.bind(this);
@@ -49,7 +50,12 @@ export class EntregaController {
         try {
             const { id } = req.params;
             const entrega = await this.service.buscarPorId(id);
-            res.status(200).json(entrega);
+
+            const motoristas = entrega.status === 'CRIADA'
+                ? await this.motoristasService.listarTodos()
+                : [];
+
+            res.render('entregas/detalhe', { title: 'Detalhes da Entrega', entrega, motoristas });
         } catch (err) {
             next(err);
         }

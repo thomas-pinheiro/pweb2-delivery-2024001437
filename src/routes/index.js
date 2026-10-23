@@ -14,7 +14,7 @@ export function criarRotas() {
     const motoristasRepo = new MotoristasRepositoryPrisma();
     const entregasService = new EntregaService(entregasRepo, motoristasRepo);
     const motoristasService = new MotoristaService(motoristasRepo, entregasRepo);
-    const entregasController = new EntregaController(entregasService);
+    const entregasController = new EntregaController(entregasService, motoristasService);
     const motoristasController = new MotoristaController(motoristasService);
 
     const router = Router();

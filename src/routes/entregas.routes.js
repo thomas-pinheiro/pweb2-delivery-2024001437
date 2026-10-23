@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { regrasEntrega, validarCriacaoEntrega } from '../middlewares/validarCriacaoEntrega.middleware.js';
 import { validarAtribuicaoEntrega } from '../middlewares/validarAtribuicaoEntrega.middleware.js';
 
-export function criarEntregasRouter(entregaController) {
+export function criarEntregasRouter(entregaController, motoristaController) {
     const router = Router();
 
     router.post('/', regrasEntrega, validarCriacaoEntrega('entregas/nova'), entregaController.criar);
