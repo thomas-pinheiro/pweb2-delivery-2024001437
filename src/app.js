@@ -14,7 +14,7 @@ import methodOverride from 'method-override';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { criarRotas } from './routes/index.js';
-import { middlewareDeErros } from './middlewares/erros.middleware.js';
+import { naoEncontrado, middlewareDeErros } from './middlewares/erros.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -50,9 +50,7 @@ app.get('/', (req, res) => res.redirect('/api/entregas'));
 app.use('/api', criarRotas());
 
 // Tratamento de erros
+app.use(naoEncontrado);
 app.use(middlewareDeErros);
-
-// 404 para rotas não mapeadas (mantenha por último, antes do listen).
-app.use((req, res) => res.status(404).render('erros/erro', { titulo: 'Página não encontrada', mensagem: 'A página que você está procurando não existe.' }));
 
 export default app;
