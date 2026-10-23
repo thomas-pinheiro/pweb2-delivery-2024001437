@@ -10,7 +10,7 @@
 
         <% if (entrega.status !== 'ENTREGUE' && entrega.status !== 'CANCELADA') { %>
         <form method="POST" action="/entregas/<%= entrega.id %>/cancelar?_method=PATCH">
-            <button type="submit" class="btn btn-danger">Cancelar</button>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Cancelar esta entrega?')">Cancelar</button>
         </form>
         <% } %>
 
