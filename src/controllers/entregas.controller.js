@@ -9,6 +9,11 @@ export class EntregaController {
         this.cancelarEntrega = this.cancelarEntrega.bind(this);
         this.obterHistorico = this.obterHistorico.bind(this);
         this.atribuirEntrega = this.atribuirEntrega.bind(this);
+        this.novaEntregaForm = this.novaEntregaForm.bind(this);
+    };
+
+    async novaEntregaForm(req, res, next) {
+        res.render('entregas/nova', { title: 'Nova Entrega' });
     };
 
     async criar(req, res, next) {

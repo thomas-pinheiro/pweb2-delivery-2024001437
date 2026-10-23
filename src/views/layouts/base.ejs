@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= typeof titulo !== 'undefined' ? titulo : 'Delivery Tracker' %></title>
+  <meta charset="UTF-8">
+  <title><%= typeof titulo !== 'undefined' ? titulo : 'Minha App' %></title>
+  <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
-    <%- include('../partials/navbar') %>
-    <main>
-        <%- include('../partials/flash') %>
-        <%- body %>
-    </main>
+  <%- include('../partials/navbar') %>
+
+  <main class="container">
+    <%- body %>   <!-- O conteúdo de cada página é injetado aqui -->
+  </main>
+
+  <%- include('../partials/footer') %>
 </body>
 </html>
