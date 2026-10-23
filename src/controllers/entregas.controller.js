@@ -1,5 +1,10 @@
 import { AppError } from '../utils/AppError.js';
 
+/**
+ * Controller HTTP de Entregas: traduz requisições em chamadas ao `EntregaService` e
+ * responde com `res.render` (leitura) ou `res.redirect` (escrita, padrão PRG) —
+ * nunca `res.json`.
+ */
 export class EntregaController {
     constructor(service, motoristasService) {
         this.service = service;
@@ -15,10 +20,16 @@ export class EntregaController {
         this.novaEntregaForm = this.novaEntregaForm.bind(this);
     };
 
+    /** GET /entregas/nova — formulário de criação, em branco. */
     async novaEntregaForm(req, res, next) {
         res.render('entregas/nova', { titulo: 'Nova Entrega', dados: {}, erros: [] });
     };
 
+    /**
+     * POST /entregas — cria e redireciona (PRG). Erro de negócio (ex.: origem ==
+     * destino, duplicada) reexibe o form com a mensagem, em vez de seguir pro
+     * tratador de erro genérico.
+     */
     async criar(req, res, next) {
         try {
             const novaEntrega = await this.service.criar(req.body);
@@ -36,6 +47,7 @@ export class EntregaController {
         }
     };
 
+    /** GET /entregas — listagem, com filtro opcional por `?status=`. */
     async listarTodos(req, res, next) {
         try {
             const { status } = req.query;
@@ -46,6 +58,11 @@ export class EntregaController {
         }
     };
 
+    /**
+     * GET /entregas/:id — detalhe, histórico e motorista atribuído (se houver).
+     * Só busca a lista de motoristas ativos quando o `<select>` de atribuição vai
+     * ser exibido (status `CRIADA`), evitando uma query desnecessária.
+     */
     async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
@@ -70,6 +87,7 @@ export class EntregaController {
         }
     };
 
+    /** PATCH /entregas/:id/avancar — avança o status e redireciona pro detalhe (PRG). */
     async avancarEntrega(req, res, next) {
         try {
             const { id } = req.params;
@@ -85,6 +103,7 @@ export class EntregaController {
         }
     };
 
+    /** PATCH /entregas/:id/cancelar — cancela e redireciona pro detalhe (PRG). */
     async cancelarEntrega(req, res, next) {
         try {
             const { id } = req.params;
@@ -100,6 +119,10 @@ export class EntregaController {
         }
     };
 
+    /**
+     * GET /entregas/:id/historico — endpoint JSON extra do Cap. 4/5, fora do
+     * contrato SSR desta atividade (o histórico já vem embutido no detalhe).
+     */
     async obterHistorico(req, res, next) {
         try {
             const { id } = req.params;
@@ -110,6 +133,7 @@ export class EntregaController {
         }
     };
 
+    /** PATCH /entregas/:id/atribuir — atribui o motorista e redireciona pro detalhe (PRG). */
     async atribuirEntrega(req, res, next) {
         try {
             const { id } = req.params;

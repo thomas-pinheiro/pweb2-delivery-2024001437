@@ -1,6 +1,6 @@
 import { AppError } from '../utils/AppError.js';
 
-// Página 404 para rotas não encontradas
+/** 404 em HTML para qualquer rota não encontrada (RF-05). */
 export const naoEncontrado = (req, res) => {
   res.status(404).render('erros/404', {
     titulo:   'Página não encontrada',
@@ -8,11 +8,14 @@ export const naoEncontrado = (req, res) => {
   });
 };
 
-// Middleware de erro geral (4 parâmetros)
+/**
+ * Tratador de erro geral. `AppError` vira página de erro com o status/mensagem de
+ * negócio (RF-06); qualquer outro erro vira 500 genérico (mensagem só detalhada
+ * fora de produção). Responde em JSON em vez de HTML se o `Accept` pedir.
+ */
 export const middlewareDeErros = (err, req, res, next) => {
   console.error(err);
 
-  // Decidir se a resposta deve ser JSON ou HTML
   const aceitaJson = req.headers['accept']?.includes('application/json');
 
   if (aceitaJson) {

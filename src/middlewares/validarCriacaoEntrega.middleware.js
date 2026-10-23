@@ -1,6 +1,9 @@
 import { body, validationResult } from 'express-validator';
 
-// Regras de validação para criação de entrega
+/**
+ * Regras de formato/presença para o formulário de criação de entrega.
+ * Regras de negócio (origem ≠ destino, duplicidade) ficam no `EntregaService`.
+ */
 export const regrasEntrega = [
   body('descricao')
     .trim()
@@ -16,7 +19,11 @@ export const regrasEntrega = [
     .notEmpty().withMessage('O destino é obrigatório')
 ];
 
-// Middleware que verifica o resultado da validação
+/**
+ * Se `regrasEntrega` encontrou erro, reexibe `viewName` (400) com as mensagens e os
+ * dados já digitados, em vez de seguir para o controller (RF-04).
+ * @param {string} viewName View a renderizar em caso de erro, ex.: 'entregas/nova'.
+ */
 export const validarCriacaoEntrega = (viewName) => (req, res, next) => {
   const erros = validationResult(req);
 

@@ -1,3 +1,8 @@
+/**
+ * Valida o `motoristaId` do `<select>` de atribuição. Diferente da criação de
+ * entrega/motorista, não há uma view própria para reexibir — o erro grava flash e
+ * redireciona de volta para o detalhe da entrega, igual ao caminho de sucesso.
+ */
 export const validarAtribuicaoEntrega = (req, res, next) => {
     const { id } = req.params;
     const { motoristaId } = req.body;

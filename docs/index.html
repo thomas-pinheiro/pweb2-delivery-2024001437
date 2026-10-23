@@ -8,143 +8,136 @@
 <div class="col-content">
 <div class="tsd-page-title">
 <h1>pweb2-delivery-cap04</h1></div>
-<div class="tsd-panel tsd-typography"><h1 id="delivery-tracker-exercícios-dos-capítulos-4-e-5" class="tsd-anchor-link">Delivery Tracker — Exercícios dos Capítulos 4 e 5<a href="#delivery-tracker-exercícios-dos-capítulos-4-e-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<div class="tsd-panel tsd-typography"><h1 id="delivery-tracker-interface-web-com-ssr-ejs" class="tsd-anchor-link">Delivery Tracker — Interface Web com SSR (EJS)<a href="#delivery-tracker-interface-web-com-ssr-ejs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h1>
 <blockquote>
-<p><strong>Programação Web II — IFAL/Maceió.</strong> Este é o <strong>projeto do semestre</strong> (avaliado). No Cap. 4 você
-inicia a <strong>Delivery Tracker API</strong> com <strong>arquitetura em camadas</strong> e, depois, <strong>Repository Pattern +
-injeção de dependência</strong>. No Cap. 5 a persistência passa a ser <strong>real</strong>, com <strong>Prisma + SQLite</strong>.
-A correção é <strong>automática</strong> (autograder de conformidade) + persistência + arquitetura.</p>
+<p><strong>Programação Web II — IFAL/Maceió.</strong> Este é o <strong>projeto do semestre</strong> (avaliado). No Cap. 4 o
+projeto começa como <strong>API JSON</strong> com <strong>arquitetura em camadas</strong> e <strong>Repository Pattern + injeção
+de dependência</strong>. No Cap. 5 a persistência passa a ser <strong>real</strong>, com <strong>Prisma + SQLite</strong>. No
+Cap. 6 (esta entrega) a <strong>API JSON é substituída por uma interface web renderizada no servidor
+(SSR)</strong> com <strong>EJS</strong> — páginas, formulários e ações por botão, no lugar de <code>res.json()</code>.</p>
 </blockquote>
-<h2 id="como-usar-este-repositório" class="tsd-anchor-link">Como usar este repositório<a href="#como-usar-este-repositório" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<ol>
-<li>Clique em <strong>&quot;Use this template&quot;</strong> e crie <strong><code>pweb2-delivery-&lt;matricula&gt;</code></strong> (ex.: <code>pweb2-delivery-20231012345</code>).
-Este é o repositório que você usará o <strong>semestre inteiro</strong> (evolui a cada capítulo).</li>
-<li>Clone, instale, crie o banco e rode:<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1">                                      </span><span class="hl-3"># também gera o Prisma Client (postinstall)</span><br/><span class="hl-0">cp</span><span class="hl-1"> </span><span class="hl-2">.env.example</span><span class="hl-1"> </span><span class="hl-2">.env</span><span class="hl-1">                             </span><span class="hl-3"># DATABASE_URL=&quot;file:./dev.db&quot;</span><br/><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">prisma</span><span class="hl-1"> </span><span class="hl-2">migrate</span><span class="hl-1"> </span><span class="hl-2">dev</span><span class="hl-1">                           </span><span class="hl-3"># cria o banco e aplica as migrations</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">start</span><span class="hl-1">                                        </span><span class="hl-3"># http://localhost:3000</span><br/><span class="hl-3"># em outro terminal — autograder:</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">check</span><span class="hl-1">                                    </span><span class="hl-3"># = BASE_URL=http://localhost:3000 node autograder/check.mjs</span>
+<h2 id="como-rodar" class="tsd-anchor-link">Como rodar<a href="#como-rodar" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code class="bash"><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">install</span><span class="hl-1">                                      </span><span class="hl-3"># também gera o Prisma Client (postinstall)</span><br/><span class="hl-0">cp</span><span class="hl-1"> </span><span class="hl-2">.env.example</span><span class="hl-1"> </span><span class="hl-2">.env</span><span class="hl-1">                             </span><span class="hl-3"># DATABASE_URL=&quot;file:./dev.db&quot;</span><br/><span class="hl-0">npx</span><span class="hl-1"> </span><span class="hl-2">prisma</span><span class="hl-1"> </span><span class="hl-2">migrate</span><span class="hl-1"> </span><span class="hl-2">dev</span><span class="hl-1">                           </span><span class="hl-3"># cria o banco e aplica as migrations</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">dev</span><span class="hl-1">                                      </span><span class="hl-3"># http://localhost:3000</span>
 </code><button type="button">Copy</button></pre>
 
-</li>
-<li>A cada <code>git push</code>, o <strong>GitHub Actions</strong> roda o autograder e mostra a nota na aba <strong>Actions</strong>
-(resumo do job). O <code>autograder/check.mjs</code> é <strong>aberto</strong> — leia para saber exatamente o que se espera.</li>
-</ol>
+<p>Abra <code>http://localhost:3000</code> no navegador — a página redireciona para <code>/entregas</code>.</p>
+<pre><code class="bash"><span class="hl-3"># em outro terminal, com o servidor no ar — autograder:</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">start</span><br/><span class="hl-0">npm</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">check</span><span class="hl-1">        </span><span class="hl-3"># = BASE_URL=http://localhost:3000 node autograder/check.mjs</span>
+</code><button type="button">Copy</button></pre>
+
 <h2 id="estrutura" class="tsd-anchor-link">Estrutura<a href="#estrutura" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<pre><code><span class="hl-4">prisma</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-4">schema</span><span class="hl-1">.</span><span class="hl-4">prisma</span><span class="hl-1">          # </span><span class="hl-4">modelos</span><span class="hl-1"> </span><span class="hl-4">Entrega</span><span class="hl-1">, </span><span class="hl-4">Motorista</span><span class="hl-1"> </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-0">Evento</span><span class="hl-1"> (</span><span class="hl-4">histórico</span><span class="hl-1">)</span><br/><span class="hl-1">└── </span><span class="hl-4">migrations</span><span class="hl-1">/            # </span><span class="hl-4">migrations</span><span class="hl-1"> </span><span class="hl-0">versionadas</span><span class="hl-1"> (</span><span class="hl-4">geradas</span><span class="hl-1"> </span><span class="hl-4">por</span><span class="hl-1"> </span><span class="hl-4">prisma</span><span class="hl-1"> </span><span class="hl-4">migrate</span><span class="hl-1"> </span><span class="hl-4">dev</span><span class="hl-1">)</span><br/><span class="hl-4">src</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-4">config</span><span class="hl-1">/</span><span class="hl-4">database</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1">     # </span><span class="hl-4">singleton</span><span class="hl-1"> </span><span class="hl-5">do</span><span class="hl-1"> </span><span class="hl-4">Prisma</span><span class="hl-1"> </span><span class="hl-4">Client</span><br/><span class="hl-1">├── </span><span class="hl-4">controllers</span><span class="hl-1">/           # </span><span class="hl-4">traduz</span><span class="hl-1"> </span><span class="hl-6">HTTP</span><span class="hl-1"> ↔ </span><span class="hl-0">service</span><span class="hl-1"> (</span><span class="hl-4">sem</span><span class="hl-1"> </span><span class="hl-4">regra</span><span class="hl-1"> </span><span class="hl-4">de</span><span class="hl-1"> </span><span class="hl-4">negócio</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-4">services</span><span class="hl-1">/              # </span><span class="hl-6">TODA</span><span class="hl-1"> </span><span class="hl-4">a</span><span class="hl-1"> </span><span class="hl-4">regra</span><span class="hl-1"> </span><span class="hl-4">de</span><span class="hl-1"> </span><span class="hl-4">negócio</span><br/><span class="hl-1">├── </span><span class="hl-4">repositories</span><span class="hl-1">/</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">contratos</span><span class="hl-1">/         # </span><span class="hl-4">IEntregasRepository</span><span class="hl-1"> </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-0">IMotoristasRepository</span><span class="hl-1"> (</span><span class="hl-4">JSDoc</span><span class="hl-1">)</span><br/><span class="hl-1">│   ├── *.</span><span class="hl-4">repository</span><span class="hl-1">.</span><span class="hl-4">prisma</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1">  # </span><span class="hl-4">implementação</span><span class="hl-1"> </span><span class="hl-4">com</span><span class="hl-1"> </span><span class="hl-0">Prisma</span><span class="hl-1"> (</span><span class="hl-4">em</span><span class="hl-1"> </span><span class="hl-4">uso</span><span class="hl-1">)</span><br/><span class="hl-1">│   └── *.</span><span class="hl-4">repository</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1">    # </span><span class="hl-4">implementação</span><span class="hl-1"> </span><span class="hl-4">em</span><span class="hl-1"> </span><span class="hl-0">memória</span><span class="hl-1"> (</span><span class="hl-4">Cap</span><span class="hl-1">. </span><span class="hl-7">4</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-4">database</span><span class="hl-1">/              # </span><span class="hl-4">banco</span><span class="hl-1"> </span><span class="hl-4">em</span><span class="hl-1"> </span><span class="hl-4">memória</span><span class="hl-1"> </span><span class="hl-4">usado</span><span class="hl-1"> </span><span class="hl-4">pelos</span><span class="hl-1"> </span><span class="hl-4">repositories</span><span class="hl-1"> </span><span class="hl-5">do</span><span class="hl-1"> </span><span class="hl-4">Cap</span><span class="hl-1">. </span><span class="hl-7">4</span><br/><span class="hl-1">├── </span><span class="hl-4">routes</span><span class="hl-1">/                # </span><span class="hl-4">composition</span><span class="hl-1"> </span><span class="hl-0">root</span><span class="hl-1"> (</span><span class="hl-4">injeção</span><span class="hl-1">) + </span><span class="hl-4">monta</span><span class="hl-1"> </span><span class="hl-4">em</span><span class="hl-1"> /</span><span class="hl-4">api</span><br/><span class="hl-1">└── </span><span class="hl-4">utils</span><span class="hl-1">/</span>
+<pre><code><span class="hl-4">prisma</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-4">schema</span><span class="hl-1">.</span><span class="hl-4">prisma</span><span class="hl-1">          # </span><span class="hl-4">modelos</span><span class="hl-1"> </span><span class="hl-4">Entrega</span><span class="hl-1">, </span><span class="hl-4">Motorista</span><span class="hl-1"> </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-0">Evento</span><span class="hl-1"> (</span><span class="hl-4">histórico</span><span class="hl-1">)</span><br/><span class="hl-1">└── </span><span class="hl-4">migrations</span><span class="hl-1">/            # </span><span class="hl-4">migrations</span><span class="hl-1"> </span><span class="hl-0">versionadas</span><span class="hl-1"> (</span><span class="hl-4">geradas</span><span class="hl-1"> </span><span class="hl-4">por</span><span class="hl-1"> </span><span class="hl-4">prisma</span><span class="hl-1"> </span><span class="hl-4">migrate</span><span class="hl-1"> </span><span class="hl-4">dev</span><span class="hl-1">)</span><br/><span class="hl-4">src</span><span class="hl-1">/</span><br/><span class="hl-1">├── </span><span class="hl-4">config</span><span class="hl-1">/</span><span class="hl-4">database</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1">     # </span><span class="hl-4">singleton</span><span class="hl-1"> </span><span class="hl-5">do</span><span class="hl-1"> </span><span class="hl-4">Prisma</span><span class="hl-1"> </span><span class="hl-4">Client</span><br/><span class="hl-1">├── </span><span class="hl-4">controllers</span><span class="hl-1">/           # </span><span class="hl-4">traduz</span><span class="hl-1"> </span><span class="hl-6">HTTP</span><span class="hl-1"> ↔ </span><span class="hl-4">service</span><span class="hl-1"> — </span><span class="hl-4">renderiza</span><span class="hl-1"> </span><span class="hl-0">views</span><span class="hl-1"> (</span><span class="hl-4">res</span><span class="hl-1">.</span><span class="hl-4">render</span><span class="hl-1">) </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-0">redireciona</span><span class="hl-1"> (</span><span class="hl-6">PRG</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-4">services</span><span class="hl-1">/               # </span><span class="hl-6">TODA</span><span class="hl-1"> </span><span class="hl-4">a</span><span class="hl-1"> </span><span class="hl-4">regra</span><span class="hl-1"> </span><span class="hl-4">de</span><span class="hl-1"> </span><span class="hl-0">negócio</span><span class="hl-1"> (</span><span class="hl-4">intacta</span><span class="hl-1"> </span><span class="hl-4">desde</span><span class="hl-1"> </span><span class="hl-4">o</span><span class="hl-1"> </span><span class="hl-4">Cap</span><span class="hl-1">. </span><span class="hl-7">5</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-4">repositories</span><span class="hl-1">/</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">contratos</span><span class="hl-1">/         # </span><span class="hl-4">IEntregasRepository</span><span class="hl-1"> </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-0">IMotoristasRepository</span><span class="hl-1"> (</span><span class="hl-4">JSDoc</span><span class="hl-1">)</span><br/><span class="hl-1">│   ├── *.</span><span class="hl-4">repository</span><span class="hl-1">.</span><span class="hl-4">prisma</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1">  # </span><span class="hl-4">implementação</span><span class="hl-1"> </span><span class="hl-4">com</span><span class="hl-1"> </span><span class="hl-0">Prisma</span><span class="hl-1"> (</span><span class="hl-4">em</span><span class="hl-1"> </span><span class="hl-4">uso</span><span class="hl-1">, </span><span class="hl-4">intacta</span><span class="hl-1"> </span><span class="hl-4">desde</span><span class="hl-1"> </span><span class="hl-4">o</span><span class="hl-1"> </span><span class="hl-4">Cap</span><span class="hl-1">. </span><span class="hl-7">5</span><span class="hl-1">)</span><br/><span class="hl-1">│   └── *.</span><span class="hl-4">repository</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1">    # </span><span class="hl-4">implementação</span><span class="hl-1"> </span><span class="hl-4">em</span><span class="hl-1"> </span><span class="hl-0">memória</span><span class="hl-1"> (</span><span class="hl-4">Cap</span><span class="hl-1">. </span><span class="hl-7">4</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-4">database</span><span class="hl-1">/               # </span><span class="hl-4">banco</span><span class="hl-1"> </span><span class="hl-4">em</span><span class="hl-1"> </span><span class="hl-4">memória</span><span class="hl-1"> </span><span class="hl-4">usado</span><span class="hl-1"> </span><span class="hl-4">pelos</span><span class="hl-1"> </span><span class="hl-4">repositories</span><span class="hl-1"> </span><span class="hl-5">do</span><span class="hl-1"> </span><span class="hl-4">Cap</span><span class="hl-1">. </span><span class="hl-7">4</span><br/><span class="hl-1">├── </span><span class="hl-4">middlewares</span><span class="hl-1">/            # </span><span class="hl-0">validação</span><span class="hl-1"> (</span><span class="hl-4">express</span><span class="hl-1">-</span><span class="hl-4">validator</span><span class="hl-1">) </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-4">tratamento</span><span class="hl-1"> </span><span class="hl-4">de</span><span class="hl-1"> </span><span class="hl-4">erros</span><span class="hl-1">/</span><span class="hl-7">404</span><span class="hl-1"> (</span><span class="hl-6">HTML</span><span class="hl-1">)</span><br/><span class="hl-1">├── </span><span class="hl-4">routes</span><span class="hl-1">/                 # </span><span class="hl-4">composition</span><span class="hl-1"> </span><span class="hl-0">root</span><span class="hl-1"> (</span><span class="hl-4">injeção</span><span class="hl-1">) + </span><span class="hl-4">monta</span><span class="hl-1"> </span><span class="hl-5">as</span><span class="hl-1"> </span><span class="hl-8">rotas</span><span class="hl-1"> </span><span class="hl-8">em</span><span class="hl-1"> /</span><br/><span class="hl-1">├── </span><span class="hl-4">views</span><span class="hl-1">/                  # </span><span class="hl-6">EJS</span><span class="hl-1"> — </span><span class="hl-4">layout</span><span class="hl-1">, </span><span class="hl-4">partials</span><span class="hl-1"> </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-4">telas</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">layouts</span><span class="hl-1">/</span><span class="hl-4">base</span><span class="hl-1">.</span><span class="hl-4">ejs</span><span class="hl-1">    # </span><span class="hl-4">layout</span><span class="hl-1"> </span><span class="hl-0">único</span><span class="hl-1"> (</span><span class="hl-4">express</span><span class="hl-1">-</span><span class="hl-4">ejs</span><span class="hl-1">-</span><span class="hl-4">layouts</span><span class="hl-1">)</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">partials</span><span class="hl-1">/           # </span><span class="hl-4">navbar</span><span class="hl-1">, </span><span class="hl-4">flash</span><span class="hl-1">, </span><span class="hl-4">footer</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">entregas</span><span class="hl-1">/           # </span><span class="hl-4">listagem</span><span class="hl-1">, </span><span class="hl-4">nova</span><span class="hl-1">, </span><span class="hl-4">detalhe</span><br/><span class="hl-1">│   ├── </span><span class="hl-4">motoristas</span><span class="hl-1">/         # </span><span class="hl-4">listagem</span><span class="hl-1">, </span><span class="hl-4">novo</span><span class="hl-1">, </span><span class="hl-4">detalhe</span><br/><span class="hl-1">│   └── </span><span class="hl-4">erros</span><span class="hl-1">/              # </span><span class="hl-7">404</span><span class="hl-1"> </span><span class="hl-4">e</span><span class="hl-1"> </span><span class="hl-4">página</span><span class="hl-1"> </span><span class="hl-4">de</span><span class="hl-1"> </span><span class="hl-4">erro</span><span class="hl-1"> </span><span class="hl-4">genérica</span><br/><span class="hl-1">└── </span><span class="hl-4">utils</span><span class="hl-1">/</span>
 </code><button>Copy</button></pre>
 
 <ul>
 <li><strong>Regra de negócio só no Service.</strong> Injeção de dependência no <strong>composition root</strong> (<code>src/routes</code>).</li>
+<li><strong>Controllers não fazem mais <code>res.json()</code></strong> (exceto <code>GET /api/health</code>) — toda resposta é uma
+view renderizada (<code>res.render</code>) ou um redirect (PRG).</li>
 <li>O <code>server.js</code> só configura o app (já traz o <code>GET /api/health</code> exigido — não remova).</li>
 </ul>
 <h2 id="etapas-ver-os-enunciados-completos" class="tsd-anchor-link">Etapas (ver os enunciados completos)<a href="#etapas-ver-os-enunciados-completos" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
-<li><strong>Atividade 05 — Entregas em camadas:</strong> CRUD de <code>/api/entregas</code>, ciclo de status
-(<code>CRIADA → EM_TRANSITO → ENTREGUE</code>/<code>CANCELADA</code>), histórico. Meta: checagens de <strong>Entregas</strong> verdes.</li>
-<li><strong>Atividade 06 — Motoristas + Contratos + DI:</strong> <code>/api/motoristas</code>, atribuição de motorista,
-contratos de repository (JSDoc) e composição num ponto único. Meta: <strong>122/122</strong>.</li>
+<li><strong>Atividade 05 — Entregas em camadas:</strong> CRUD de entregas, ciclo de status
+(<code>CRIADA → EM_TRANSITO → ENTREGUE</code>/<code>CANCELADA</code>), histórico.</li>
+<li><strong>Atividade 06 — Motoristas + Contratos + DI:</strong> motoristas, atribuição, contratos de
+repository (JSDoc) e composição num ponto único.</li>
 <li><strong>Atividade 07 — Persistência com Prisma (SQLite):</strong> repositories Prisma no mesmo contrato,
 schema + migrations versionadas; os dados sobrevivem ao reinício. Services e controllers intactos.</li>
+<li><strong>Atividade 08 — Interface Web com SSR (EJS):</strong> controllers passam a <code>res.render()</code> + PRG,
+views EJS (layout + partials), validação com <code>express-validator</code> reexibindo o form com erros,
+mensagens flash e <code>method-override</code> para disparar PATCH a partir de <code>&lt;form&gt;</code> HTML.</li>
 </ul>
 <blockquote>
 <p>O critério de <strong>inversão de dependência</strong> é verificado pelo professor <strong>trocando o repository por
 um Mock</strong> que respeita o contrato — programe contra o contrato desde o início.</p>
 </blockquote>
-<h2 id="rotas" class="tsd-anchor-link">Rotas<a href="#rotas" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h2 id="rotas-ssr" class="tsd-anchor-link">Rotas (SSR)<a href="#rotas-ssr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <table>
 <thead>
 <tr>
 <th>Método</th>
 <th>Rota</th>
-<th>Corpo</th>
-<th>Sucesso</th>
-<th>Erros</th>
+<th>Comportamento</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>GET</td>
+<td><code>/</code></td>
+<td>Redireciona para <code>/entregas</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/entregas</code></td>
+<td>Listagem (tabela) + link &quot;Nova Entrega&quot; + filtro por <code>?status=</code></td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/entregas/nova</code></td>
+<td>Formulário (<code>descricao</code>, <code>origem</code>, <code>destino</code>)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/entregas</code></td>
+<td>Cria e redireciona (PRG). Inválido → reexibe o form (<code>400</code>) com erros e dados digitados</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/entregas/:id</code></td>
+<td>Detalhe: status, histórico e motorista atribuído. Inexistente → página <code>404</code></td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/entregas/:id/avancar</code></td>
+<td>Avança o status e redireciona</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/entregas/:id/cancelar</code></td>
+<td>Cancela e redireciona</td>
+</tr>
+<tr>
+<td>PATCH</td>
+<td><code>/entregas/:id/atribuir</code></td>
+<td>Recebe <code>motoristaId</code> (de um <code>&lt;select&gt;</code>) e redireciona</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/motoristas</code></td>
+<td>Listagem</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/motoristas/novo</code></td>
+<td>Formulário (<code>nome</code>, <code>cpf</code>, <code>placaVeiculo</code>)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/motoristas</code></td>
+<td>Cria e redireciona. CPF duplicado → reexibe o form com erro</td>
+</tr>
+<tr>
+<td>GET</td>
 <td><code>/api/health</code></td>
-<td>—</td>
-<td><code>200</code> <code>{ status: &quot;ok&quot; }</code></td>
-<td>—</td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/entregas</code></td>
-<td><code>{ descricao, origem, destino }</code></td>
-<td><code>201</code> entrega (<code>CRIADA</code>)</td>
-<td><code>400</code> · <code>409</code> duplicada</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/entregas?status=</code></td>
-<td>—</td>
-<td><code>200</code> array</td>
-<td>—</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/entregas/:id</code></td>
-<td>—</td>
-<td><code>200</code> entrega</td>
-<td><code>404</code></td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td><code>/api/entregas/:id/avancar</code></td>
-<td>—</td>
-<td><code>200</code> entrega</td>
-<td><code>404</code> · <code>422</code></td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td><code>/api/entregas/:id/cancelar</code></td>
-<td>—</td>
-<td><code>200</code> entrega</td>
-<td><code>404</code> · <code>422</code></td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/entregas/:id/historico</code></td>
-<td>—</td>
-<td><code>200</code> array de eventos</td>
-<td><code>404</code></td>
-</tr>
-<tr>
-<td>PATCH</td>
-<td><code>/api/entregas/:id/atribuir</code></td>
-<td><code>{ motoristaId }</code></td>
-<td><code>200</code> entrega (com <code>motoristaId</code>)</td>
-<td><code>400</code> · <code>404</code> · <code>422</code> entrega não-<code>CRIADA</code> ou motorista <code>INATIVO</code></td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/motoristas</code></td>
-<td><code>{ nome, cpf, placaVeiculo? }</code></td>
-<td><code>201</code> motorista (<code>ATIVO</code>)</td>
-<td><code>400</code> · <code>409</code> CPF duplicado</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/motoristas</code></td>
-<td>—</td>
-<td><code>200</code> array</td>
-<td>—</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/motoristas/:id</code></td>
-<td>—</td>
-<td><code>200</code> motorista</td>
-<td><code>404</code></td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/motoristas/:id/entregas?status=</code></td>
-<td>—</td>
-<td><code>200</code> só as entregas do motorista (filtro combinável)</td>
-<td><code>404</code></td>
+<td><code>200</code> <code>{ &quot;status&quot;: &quot;ok&quot; }</code> (readiness, não removido)</td>
 </tr>
 </tbody>
 </table>
+<p>As ações de estado (<code>avancar</code>, <code>cancelar</code>, <code>atribuir</code>) são <code>PATCH</code>. Como um <code>&lt;form&gt;</code> HTML só
+envia <code>GET</code>/<code>POST</code>, o form faz <code>POST .../avancar?_method=PATCH</code> e o <code>method-override</code> traduz
+isso para <code>router.patch(...)</code>.</p>
+<h2 id="views-e-ssr" class="tsd-anchor-link">Views e SSR<a href="#views-e-ssr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><strong>Layout único</strong> (<code>views/layouts/base.ejs</code>, via <code>express-ejs-layouts</code>) com os partials
+<code>navbar</code> e <code>flash</code> incluídos em toda página.</li>
+<li><strong>PRG (Post-Redirect-Get):</strong> toda escrita bem-sucedida responde com redirect — nunca HTML
+direto no mesmo <code>POST</code>/<code>PATCH</code>.</li>
+<li><strong>Flash (<code>connect-flash</code>):</strong> mensagens de sucesso/erro aparecem na página seguinte ao
+redirect, lidas uma única vez da sessão.</li>
+<li><strong>Validação (<code>express-validator</code>):</strong> formulário inválido é reexibido com as mensagens de
+erro e com os dados já digitados, sempre com status <code>4xx</code> (nunca <code>5xx</code>).</li>
+<li><strong>Erros:</strong> entrega/motorista inexistente renderiza uma página <code>404</code> em HTML; qualquer outro
+erro não tratado cai numa página de erro genérica (nunca JSON ou stack trace).</li>
+</ul>
 <h2 id="banco-de-dados-prisma-sqlite" class="tsd-anchor-link">Banco de dados (Prisma + SQLite)<a href="#banco-de-dados-prisma-sqlite" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <p>O banco é configurado por <code>DATABASE_URL</code> no <code>.env</code> (veja <code>.env.example</code>); com
 <code>file:./dev.db</code> o arquivo fica em <code>prisma/dev.db</code>. O <code>.env</code> e o <code>dev.db</code> ficam fora do git.</p>
@@ -188,7 +181,7 @@ os services dependem apenas dos contratos <code>IEntregasRepository</code> e <co
 <p>Trocar a persistência é trocar uma linha por repository no composition root: hoje são
 injetados os repositories Prisma; os de memória (<code>EntregaRepository(database)</code>) seguem o
 mesmo contrato. Só os repositories acessam o Prisma Client.</p>
-<pre><code><span class="hl-1">                       </span><span class="hl-4">src</span><span class="hl-1">/</span><span class="hl-4">routes</span><span class="hl-1">/</span><span class="hl-4">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1">  (</span><span class="hl-4">composition</span><span class="hl-1"> </span><span class="hl-4">root</span><span class="hl-1">)</span><br/><span class="hl-1">                                       │</span><br/><span class="hl-1">                  ┌────────────────────┴────────────────────┐</span><br/><span class="hl-1">                  ▼                                         ▼</span><br/><span class="hl-1">       </span><span class="hl-4">EntregasRepositoryPrisma</span><span class="hl-1">                  </span><span class="hl-4">MotoristasRepositoryPrisma</span><br/><span class="hl-1">        «</span><span class="hl-4">IEntregasRepository</span><span class="hl-1">»                     «</span><span class="hl-4">IMotoristasRepository</span><span class="hl-1">»</span><br/><span class="hl-1">                  │                                         │</span><br/><span class="hl-1">                  └────────► </span><span class="hl-4">src</span><span class="hl-1">/</span><span class="hl-4">config</span><span class="hl-1">/</span><span class="hl-4">database</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1"> ◄───────┘</span><br/><span class="hl-1">                    (</span><span class="hl-4">singleton</span><span class="hl-1"> </span><span class="hl-4">PrismaClient</span><span class="hl-1"> → </span><span class="hl-4">SQLite</span><span class="hl-1">: </span><span class="hl-4">prisma</span><span class="hl-1">/</span><span class="hl-4">dev</span><span class="hl-1">.</span><span class="hl-4">db</span><span class="hl-1">)</span><br/><br/><span class="hl-1">      </span><span class="hl-4">injetados</span><span class="hl-1"> </span><span class="hl-4">nos</span><span class="hl-1"> </span><span class="hl-0">services</span><span class="hl-1"> (</span><span class="hl-4">cada</span><span class="hl-1"> </span><span class="hl-4">service</span><span class="hl-1"> </span><span class="hl-4">recebe</span><span class="hl-1"> </span><span class="hl-4">os</span><span class="hl-1"> </span><span class="hl-4">dois</span><span class="hl-1"> </span><span class="hl-4">repositories</span><span class="hl-1">):</span><br/><br/><span class="hl-1">          </span><span class="hl-0">EntregasService</span><span class="hl-1">(</span><span class="hl-4">entregasRepo</span><span class="hl-1">, </span><span class="hl-4">motoristasRepo</span><span class="hl-1">)</span><br/><span class="hl-1">          </span><span class="hl-0">MotoristasService</span><span class="hl-1">(</span><span class="hl-4">motoristasRepo</span><span class="hl-1">, </span><span class="hl-4">entregasRepo</span><span class="hl-1">)</span><br/><span class="hl-1">                  │                                         │</span><br/><span class="hl-1">                  ▼                                         ▼</span><br/><span class="hl-1">          </span><span class="hl-4">EntregasController</span><span class="hl-1">                      </span><span class="hl-4">MotoristasController</span><br/><span class="hl-1">                  │                                         │</span><br/><span class="hl-1">                  ▼                                         ▼</span><br/><span class="hl-1">            /</span><span class="hl-4">api</span><span class="hl-1">/</span><span class="hl-4">entregas</span><span class="hl-1">                            /</span><span class="hl-4">api</span><span class="hl-1">/</span><span class="hl-4">motoristas</span>
+<pre><code><span class="hl-1">                       </span><span class="hl-4">src</span><span class="hl-1">/</span><span class="hl-4">routes</span><span class="hl-1">/</span><span class="hl-4">index</span><span class="hl-1">.</span><span class="hl-0">js</span><span class="hl-1">  (</span><span class="hl-4">composition</span><span class="hl-1"> </span><span class="hl-4">root</span><span class="hl-1">)</span><br/><span class="hl-1">                                       │</span><br/><span class="hl-1">                  ┌────────────────────┴────────────────────┐</span><br/><span class="hl-1">                  ▼                                         ▼</span><br/><span class="hl-1">       </span><span class="hl-4">EntregasRepositoryPrisma</span><span class="hl-1">                  </span><span class="hl-4">MotoristasRepositoryPrisma</span><br/><span class="hl-1">        «</span><span class="hl-4">IEntregasRepository</span><span class="hl-1">»                     «</span><span class="hl-4">IMotoristasRepository</span><span class="hl-1">»</span><br/><span class="hl-1">                  │                                         │</span><br/><span class="hl-1">                  └────────► </span><span class="hl-4">src</span><span class="hl-1">/</span><span class="hl-4">config</span><span class="hl-1">/</span><span class="hl-4">database</span><span class="hl-1">.</span><span class="hl-4">js</span><span class="hl-1"> ◄───────┘</span><br/><span class="hl-1">                    (</span><span class="hl-4">singleton</span><span class="hl-1"> </span><span class="hl-4">PrismaClient</span><span class="hl-1"> → </span><span class="hl-4">SQLite</span><span class="hl-1">: </span><span class="hl-4">prisma</span><span class="hl-1">/</span><span class="hl-4">dev</span><span class="hl-1">.</span><span class="hl-4">db</span><span class="hl-1">)</span><br/><br/><span class="hl-1">      </span><span class="hl-4">injetados</span><span class="hl-1"> </span><span class="hl-4">nos</span><span class="hl-1"> </span><span class="hl-0">services</span><span class="hl-1"> (</span><span class="hl-4">cada</span><span class="hl-1"> </span><span class="hl-4">service</span><span class="hl-1"> </span><span class="hl-4">recebe</span><span class="hl-1"> </span><span class="hl-4">os</span><span class="hl-1"> </span><span class="hl-4">dois</span><span class="hl-1"> </span><span class="hl-4">repositories</span><span class="hl-1">):</span><br/><br/><span class="hl-1">          </span><span class="hl-0">EntregasService</span><span class="hl-1">(</span><span class="hl-4">entregasRepo</span><span class="hl-1">, </span><span class="hl-4">motoristasRepo</span><span class="hl-1">)</span><br/><span class="hl-1">          </span><span class="hl-0">MotoristasService</span><span class="hl-1">(</span><span class="hl-4">motoristasRepo</span><span class="hl-1">, </span><span class="hl-4">entregasRepo</span><span class="hl-1">)</span><br/><span class="hl-1">                  │                                         │</span><br/><span class="hl-1">                  ▼                                         ▼</span><br/><span class="hl-1">          </span><span class="hl-4">EntregasController</span><span class="hl-1">                      </span><span class="hl-4">MotoristasController</span><br/><span class="hl-1">           (</span><span class="hl-4">res</span><span class="hl-1">.</span><span class="hl-4">render</span><span class="hl-1"> + </span><span class="hl-4">redirect</span><span class="hl-1">)                 (</span><span class="hl-4">res</span><span class="hl-1">.</span><span class="hl-4">render</span><span class="hl-1"> + </span><span class="hl-4">redirect</span><span class="hl-1">)</span><br/><span class="hl-1">                  │                                         │</span><br/><span class="hl-1">                  ▼                                         ▼</span><br/><span class="hl-1">              /</span><span class="hl-4">entregas</span><span class="hl-1">                                /</span><span class="hl-4">motoristas</span>
 </code><button>Copy</button></pre>
 
 <p>A regra &quot;motorista <code>INATIVO</code> não pode ser atribuído&quot; fica no <code>EntregasService</code>, pois é
@@ -201,13 +194,13 @@ regra da atribuição.</p>
 
 <h2 id="contrato-resumo" class="tsd-anchor-link">Contrato (resumo)<a href="#contrato-resumo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <ul>
-<li>Base <code>/api</code> · JSON · erro <code>{ &quot;erro&quot;: &quot;...&quot; }</code> · <code>GET /api/health</code> → <code>{ &quot;status&quot;: &quot;ok&quot; }</code>.</li>
-<li>Status: <code>201</code> criar · <code>400</code> entrada inválida · <code>404</code> não encontrado · <code>409</code> unicidade
-(duplicata/CPF) · <code>422</code> regra de estado (transição/atribuição inválida).</li>
+<li>Interface web (SSR, EJS) em <code>/entregas</code> e <code>/motoristas</code> · <code>GET /api/health</code> → <code>{ &quot;status&quot;: &quot;ok&quot; }</code>.</li>
+<li>Toda escrita bem-sucedida responde com redirect (PRG); formulário inválido reexibe o form
+com status <code>4xx</code>; entidade inexistente renderiza página <code>404</code>.</li>
 <li>Execução: <code>npm start</code>, respeita <code>process.env.PORT</code>, branch <code>main</code>.</li>
 <li>Banco: <code>DATABASE_URL=&quot;file:./dev.db&quot;</code> no <code>.env</code> (forneça <code>.env.example</code>).</li>
 </ul>
-<p>Faça <strong>um commit por avanço</strong> (Conventional Commits, ex.: <code>feat(entregas): valida origem ≠ destino</code>).
+<p>Faça <strong>um commit por avanço</strong> (Conventional Commits, ex.: <code>feat(entregas): aplica PRG na criação</code>).
 Bom trabalho! 🚀</p>
 </div></div>
 <div class="col-sidebar">
@@ -224,12 +217,13 @@ Bom trabalho! 🚀</p>
 <div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div>
 <details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="assets/icons.svg#icon-chevronDown"></use></svg>
 <h3>On This Page</h3></summary>
-<div class="tsd-accordion-details"><a href="#delivery-tracker-exercícios-dos-capítulos-4-e-5"><span>Delivery <wbr/>Tracker — <wbr/>Exercícios dos <wbr/>Capítulos 4 e 5</span></a>
+<div class="tsd-accordion-details"><a href="#delivery-tracker-interface-web-com-ssr-ejs"><span>Delivery <wbr/>Tracker — <wbr/>Interface <wbr/>Web com <wbr/>SSR (<wbr/>EJS)</span></a>
 <ul>
-<li><a href="#como-usar-este-repositório"><span>Como usar este repositório</span></a></li>
+<li><a href="#como-rodar"><span>Como rodar</span></a></li>
 <li><a href="#estrutura"><span>Estrutura</span></a></li>
 <li><a href="#etapas-ver-os-enunciados-completos"><span>Etapas (ver os enunciados completos)</span></a></li>
-<li><a href="#rotas"><span>Rotas</span></a></li>
+<li><a href="#rotas-ssr"><span>Rotas (<wbr/>SSR)</span></a></li>
+<li><a href="#views-e-ssr"><span>Views e <wbr/>SSR</span></a></li>
 <li><a href="#banco-de-dados-prisma-sqlite"><span>Banco de dados (<wbr/>Prisma + <wbr/>SQ<wbr/>Lite)</span></a></li>
 <li><a href="#composição-das-dependências"><span>Composição das dependências</span></a></li>
 <li><a href="#documentação-jsdoc"><span>Documentação (<wbr/>JS<wbr/>Doc)</span></a></li>

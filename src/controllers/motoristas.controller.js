@@ -1,5 +1,9 @@
 import { AppError } from '../utils/AppError.js';
 
+/**
+ * Controller HTTP de Motoristas: traduz requisições em chamadas ao `MotoristaService`
+ * e responde com `res.render` (leitura) ou `res.redirect` (escrita, padrão PRG).
+ */
 export class MotoristaController {
     constructor(service) {
         this.service = service;
@@ -10,11 +14,13 @@ export class MotoristaController {
         this.listarEntregas = this.listarEntregas.bind(this);
         this.novoMotoristaForm = this.novoMotoristaForm.bind(this);
     };
-    
+
+    /** GET /motoristas/novo — formulário de criação, em branco. */
     async novoMotoristaForm(req, res, next) {
         res.render('motoristas/novo', { titulo: 'Novo Motorista', dados: {}, erros: [] });
     };
 
+    /** GET /motoristas/:id — detalhe do motorista. Fora do contrato SSR, mas útil pro link "Ver" da listagem. */
     async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
@@ -28,6 +34,10 @@ export class MotoristaController {
         }
     }
 
+    /**
+     * POST /motoristas — cria e redireciona (PRG). CPF duplicado (`AppError` do
+     * service) reexibe o form com a mensagem, em vez de seguir pro tratador de erro genérico.
+     */
     async criar(req, res, next) {
         try {
             const body = req.body;
@@ -46,6 +56,7 @@ export class MotoristaController {
         }
     };
 
+    /** GET /motoristas — listagem. */
     async listarTodos(req, res, next) {
         try {
             const motoristas = await this.service.listarTodos();
@@ -55,6 +66,10 @@ export class MotoristaController {
         }
     }
 
+    /**
+     * GET /motoristas/:id/entregas — endpoint JSON extra do Cap. 4/5, fora do
+     * contrato SSR desta atividade.
+     */
     async listarEntregas(req, res, next) {
         try {
             const { id } = req.params;
