@@ -33,7 +33,17 @@
         <dt>Destino</dt><dd><%= entrega.destino %></dd>
         <dt>Status</dt><dd><%= entrega.status %></dd>
     </dl>
-
+    <p><b>Motorista:</b></p>
+    <dl class="details">
+        <% if (motoristaAtribuido) { %>
+          <dt>ID</dt><dd><%= motoristaAtribuido.id %></dd>
+          <dt>Nome</dt><dd><%= motoristaAtribuido.nome %></dd>
+          <dt>CPF</dt><dd><%= motoristaAtribuido.cpf %></dd>
+          <dt>Placa</dt><dd><%= motoristaAtribuido.placaVeiculo || 'Não informada' %></dd>
+        <% } else { %>
+          <dt>Motorista</dt><dd>Não atribuído</dd>
+        <% } %>
+    </dl>
     <p><b>Histórico:</b></p>
     <% if (entrega.historico.length === 0) { %>
     <p class="empty-state">Sem eventos registrados ainda.</p>
@@ -41,7 +51,12 @@
     <dl class="details">
         <% entrega.historico.forEach(h => { %>
         <dt><%= new Date(h.data).toLocaleString().slice(0, 17) %></dt>
-        <dd><%= h.status %></dd>
+        <dd>
+          <%= h.status %>
+          <% if (h.status === 'ATRIBUIDA' && h.motoristaId) { %>
+            — Motorista #<%= h.motoristaId %>
+          <% } %>
+        </dd>
         <% }); %>
     </dl>
     <% } %>

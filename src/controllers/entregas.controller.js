@@ -55,7 +55,16 @@ export class EntregaController {
                 ? await this.motoristasService.listarTodos()
                 : [];
 
-            res.render('entregas/detalhe', { title: 'Detalhes da Entrega', entrega, motoristas });
+            const motoristaAtribuido = entrega.motoristaId
+                ? await this.motoristasService.buscarPorId(entrega.motoristaId)
+                : null;
+
+            res.render('entregas/detalhe', {
+                title: 'Detalhes da Entrega',
+                entrega,
+                motoristas,
+                motoristaAtribuido,
+            });
         } catch (err) {
             next(err);
         }
