@@ -1,3 +1,5 @@
+import { AppError } from '../utils/AppError.js';
+
 export class MotoristaController {
     constructor(service) {
         this.service = service;
@@ -6,6 +8,11 @@ export class MotoristaController {
         this.listarTodos = this.listarTodos.bind(this);
         this.buscarPorId = this.buscarPorId.bind(this);
         this.listarEntregas = this.listarEntregas.bind(this);
+        this.novoMotoristaForm = this.novoMotoristaForm.bind(this);
+    };
+    
+    async novoMotoristaForm(req, res, next) {
+        res.render('motoristas/novo', { title: 'Novo Motorista', dados: {}, erros: [] });
     };
 
     async buscarPorId(req, res, next) {
@@ -23,8 +30,16 @@ export class MotoristaController {
         try {
             const body = req.body;
             const novoMotorista = await this.service.criar(body);
-            res.status(201).json(novoMotorista);
+            req.flash('sucesso', 'Motorista criado com sucesso.');
+            res.redirect(`/motoristas`);
         } catch (err) {
+            if (err instanceof AppError) {
+                return res.status(err.statusCode).render('motoristas/novo', {
+                    titulo: 'Novo Motorista',
+                    erros: [err.message],
+                    dados: req.body,
+                });
+            }
             next(err);
         }
     };

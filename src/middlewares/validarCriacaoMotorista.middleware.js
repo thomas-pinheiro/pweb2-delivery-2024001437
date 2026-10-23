@@ -1,37 +1,32 @@
-import { AppError } from '../utils/AppError.js';
+import { body, validationResult } from 'express-validator';
 
-export const validarCriacaoMotorista = (req, res, next) => {
-    const { nome, cpf, placaVeiculo } = req.body;
+// Regras de validação para criação de motorista
+export const regrasMotorista = [
+  body('nome')
+    .trim()
+    .notEmpty().withMessage('O nome é obrigatório'),
 
-    if (nome === undefined || nome === null) {
-        throw new AppError('Nome obrigatório', 400);
-    } else if (typeof nome !== 'string' || nome.trim().length === 0) {
-        throw new AppError('Nome inválido', 400);
-    }
+  body('cpf')
+    .trim()
+    .notEmpty().withMessage('O CPF é obrigatório'),
 
-    if (cpf === undefined || cpf === null) {
-        throw new AppError('CPF obrigatório', 400);
-    } else if (typeof cpf !== 'string' || cpf.trim().length === 0) {
-        throw new AppError('CPF inválido', 400);
-    } 
-    // else {
-    //     const cpfRegex = /^\d{11}$/;
-    //     if (!cpfRegex.test(cpf)) {
-    //         throw new AppError('CPF inválido', 400);
-    //     }
-    // }
+  body('placaVeiculo')
+    .trim()
+    .optional({ checkFalsy: true })
+    .matches(/^(?:[A-Z]{3}\d{4}|[A-Z]{3}\d[A-Z]\d{2})$/i)
+    .withMessage('Formato de placa inválido')
+];
 
-    if (placaVeiculo !== undefined && placaVeiculo !== null) {
-        if (typeof placaVeiculo !== 'string') {
-            throw new AppError('Placa do veículo deve ser uma string', 400);
-        } 
+export const validarCriacaoMotorista = (viewName) => (req, res, next) => {
+    const erros = validationResult(req);
 
-        if (placaVeiculo !== '') {
-            const placaRegex = /^(?:[A-Z]{3}\d{4}|[A-Z]{3}\d[A-Z]\d{2})$/i;
-            if (!placaRegex.test(placaVeiculo)) {
-                throw new AppError('Placa do veículo formato inválido', 400);
-            }
-        }
+    if (!erros.isEmpty()) {
+        const mensagens = erros.array().map(e => e.msg);
+        return res.status(400).render(viewName, {
+            titulo: 'Novo Motorista',
+            erros: mensagens,
+            dados: req.body,
+        });
     }
 
     next();
