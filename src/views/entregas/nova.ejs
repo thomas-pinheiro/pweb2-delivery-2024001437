@@ -1,7 +1,10 @@
-<% include('../partials/header') %>
-
 <div class="container">
     <h1>Nova Entrega</h1>
+    <% if (erros && erros.length > 0) { %>
+        <div class="alert alert-error">
+        <% erros.forEach(e => { %><p><%= e %></p><% }); %>
+        </div>
+    <% } %>
     <form action="/entregas" method="POST">
         <div class="form-group">
             <label for="descricao">Descrição:</label>
@@ -18,5 +21,3 @@
         <button type="submit" class="btn btn-primary">Criar Entrega</button>
     </form>
 </div>
-
-<% include('../partials/footer') %>

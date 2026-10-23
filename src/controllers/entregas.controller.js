@@ -1,3 +1,5 @@
+import { AppError } from '../utils/AppError.js';
+
 export class EntregaController {
     constructor(service) {
         this.service = service;
@@ -13,15 +15,22 @@ export class EntregaController {
     };
 
     async novaEntregaForm(req, res, next) {
-        res.render('entregas/nova', { title: 'Nova Entrega' });
+        res.render('entregas/nova', { title: 'Nova Entrega', dados: {}, erros: [] });
     };
 
     async criar(req, res, next) {
         try {
-            const body = req.body;
-            const novaEntrega = await this.service.criar(body);
-            res.status(201).json(novaEntrega);
+            const novaEntrega = await this.service.criar(req.body);
+            req.flash('sucesso', 'Entrega criada com sucesso.');
+            res.redirect(`/entregas/${novaEntrega.id}`);
         } catch (err) {
+            if (err instanceof AppError) {
+                return res.status(err.statusCode).render('entregas/nova', {
+                    titulo: 'Nova Entrega',
+                    erros: [err.message],
+                    dados: req.body,
+                });
+            }
             next(err);
         }
     };

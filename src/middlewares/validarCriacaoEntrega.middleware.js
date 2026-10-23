@@ -1,19 +1,33 @@
-import { AppError } from '../utils/AppError.js';
+import { body, validationResult } from 'express-validator';
 
-export const validarCriacaoEntrega = (req, res, next) => {
-  const { descricao, origem, destino } = req.body;
+// Regras de validação para criação de entrega
+export const regrasEntrega = [
+  body('descricao')
+    .trim()
+    .notEmpty().withMessage('A descrição é obrigatória')
+    .isLength({ min: 2 }).withMessage('A descrição deve ter ao menos 2 caracteres'),
 
-    if (!descricao || typeof descricao !== 'string') {
-        throw new AppError('Descrição inválida', 400);
-    }
+  body('origem')
+    .trim()
+    .notEmpty().withMessage('A origem é obrigatória'),
 
-    if (!origem || typeof origem !== 'string') {
-        throw new AppError('Origem inválida', 400);
-    }
+  body('destino')
+    .trim()
+    .notEmpty().withMessage('O destino é obrigatório')
+];
 
-    if (!destino || typeof destino !== 'string') {
-        throw new AppError('Destino inválido', 400);
-    }
+// Middleware que verifica o resultado da validação
+export const validarCriacaoEntrega = (viewName) => (req, res, next) => {
+  const erros = validationResult(req);
 
-    next();
+  if (!erros.isEmpty()) {
+    const mensagens = erros.array().map(e => e.msg);
+    return res.status(400).render(viewName, {
+      titulo: 'Nova Entrega',
+      erros:  mensagens,
+      dados:  req.body,
+    });
+  }
+
+  next();
 };

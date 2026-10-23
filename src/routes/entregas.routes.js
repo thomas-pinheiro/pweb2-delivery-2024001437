@@ -1,11 +1,11 @@
 import { Router } from 'express';
-import { validarCriacaoEntrega } from '../middlewares/validarCriacaoEntrega.middleware.js';
+import { regrasEntrega, validarCriacaoEntrega } from '../middlewares/validarCriacaoEntrega.middleware.js';
 import { validarAtribuicaoEntrega } from '../middlewares/validarAtribuicaoEntrega.middleware.js';
 
 export function criarEntregasRouter(entregaController) {
     const router = Router();
 
-    router.post('/', validarCriacaoEntrega, entregaController.criar);
+    router.post('/', regrasEntrega, validarCriacaoEntrega('entregas/nova'), entregaController.criar);
     router.get('/', entregaController.listarTodos);
     router.get('/nova', entregaController.novaEntregaForm);
     router.get('/:id', entregaController.buscarPorId);
