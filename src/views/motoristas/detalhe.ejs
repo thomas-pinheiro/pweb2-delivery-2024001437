@@ -1,0 +1,15 @@
+<div class="card">
+  <div class="card-header">
+    <h1><%= motorista.nome %></h1>
+</div>
+    <dl class="details">
+        <dt>Nome</dt><dd><%= motorista.nome %></dd>
+        <dt>CPF</dt><dd><%= motorista.cpf %></dd>
+        <% if (motorista.placaVeiculo === null || motorista.placaVeiculo === undefined) { %>
+            <dt>Placa do Veículo</dt><dd>Não informada</dd>
+        <% } else { %>
+            <dt>Placa do Veículo</dt><dd><%= motorista.placaVeiculo %></dd>
+        <% } %>
+    </dl>
+    <a href="/motoristas" class="btn btn-link">← Voltar</a>
+</div>

@@ -12,15 +12,17 @@ export class MotoristaController {
     };
     
     async novoMotoristaForm(req, res, next) {
-        res.render('motoristas/novo', { title: 'Novo Motorista', dados: {}, erros: [] });
+        res.render('motoristas/novo', { titulo: 'Novo Motorista', dados: {}, erros: [] });
     };
 
     async buscarPorId(req, res, next) {
         try {
             const { id } = req.params;
             const motorista = await this.service.buscarPorId(id);
-            // res.status(200).json(motorista);
-            res.render("index", { titulo: "Bem-vindo", mensagem: motorista.nome });
+            res.render('motoristas/detalhe', {
+                titulo: 'Detalhes do Motorista',
+                motorista
+            });
         } catch (err) {
             next(err);
         }
@@ -47,7 +49,7 @@ export class MotoristaController {
     async listarTodos(req, res, next) {
         try {
             const motoristas = await this.service.listarTodos();
-            res.status(200).json(motoristas)
+            res.render('motoristas/listagem', { titulo: 'Listar Motoristas', motoristas });
         } catch (err) {
             next(err);
         }
