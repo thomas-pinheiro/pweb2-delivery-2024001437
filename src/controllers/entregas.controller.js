@@ -30,7 +30,7 @@ export class EntregaController {
         try {
             const { status } = req.query;
             const entregas = await this.service.listarTodos({ status });
-            res.status(200).json(entregas);
+            res.render('entregas/listagem', { title: 'Entregas', entregas });
         } catch (err) {
             next(err);
         }
