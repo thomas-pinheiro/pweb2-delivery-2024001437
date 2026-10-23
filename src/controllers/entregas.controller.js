@@ -60,7 +60,7 @@ export class EntregaController {
                 : null;
 
             res.render('entregas/detalhe', {
-                title: 'Detalhes da Entrega',
+                titulo: 'Detalhes da Entrega',
                 entrega,
                 motoristas,
                 motoristaAtribuido,
