@@ -1,25 +1,31 @@
-# Delivery Tracker — Exercícios dos Capítulos 4 e 5
+# Delivery Tracker — Interface Web com SSR (EJS)
 
-> **Programação Web II — IFAL/Maceió.** Este é o **projeto do semestre** (avaliado). No Cap. 4 você
-> inicia a **Delivery Tracker API** com **arquitetura em camadas** e, depois, **Repository Pattern +
-> injeção de dependência**. No Cap. 5 a persistência passa a ser **real**, com **Prisma + SQLite**.
-> A correção é **automática** (autograder de conformidade) + persistência + arquitetura.
+> **Programação Web II — IFAL/Maceió.** Este é o **projeto do semestre** (avaliado). No Cap. 4 o
+> projeto começa como **API JSON** com **arquitetura em camadas** e **Repository Pattern + injeção
+> de dependência**. No Cap. 5 a persistência passa a ser **real**, com **Prisma + SQLite**. No
+> Cap. 6 (esta entrega) a **API JSON é substituída por uma interface web renderizada no servidor
+> (SSR)** com **EJS** — páginas, formulários e ações por botão, no lugar de `res.json()`.
 
-## Como usar este repositório
+## Como rodar
 
-1. Clique em **"Use this template"** e crie **`pweb2-delivery-<matricula>`** (ex.: `pweb2-delivery-20231012345`).
-   Este é o repositório que você usará o **semestre inteiro** (evolui a cada capítulo).
-2. Clone, instale, crie o banco e rode:
-   ```bash
-   npm install                                      # também gera o Prisma Client (postinstall)
-   cp .env.example .env                             # DATABASE_URL="file:./dev.db"
-   npx prisma migrate dev                           # cria o banco e aplica as migrations
-   npm start                                        # http://localhost:3000
-   # em outro terminal — autograder:
-   npm run check                                    # = BASE_URL=http://localhost:3000 node autograder/check.mjs
-   ```
-3. A cada `git push`, o **GitHub Actions** roda o autograder e mostra a nota na aba **Actions**
-   (resumo do job). O `autograder/check.mjs` é **aberto** — leia para saber exatamente o que se espera.
+```bash
+npm install                                      # também gera o Prisma Client (postinstall)
+cp .env.example .env                             # DATABASE_URL="file:./dev.db"
+npx prisma migrate dev                           # cria o banco e aplica as migrations
+npm run dev                                      # http://localhost:3000
+```
+
+Abra `http://localhost:3000` no navegador — a página redireciona para `/entregas`.
+
+```bash
+# em outro terminal, com o servidor no ar — autograder:
+npm start
+npm run check        # = BASE_URL=http://localhost:3000 node autograder/check.mjs
+```
+
+## Print da tela de entregas
+
+![Tela de listagem de entregas](./screenshots/entregas.png)
 
 ## Estrutura
 
@@ -29,48 +35,77 @@ prisma/
 └── migrations/            # migrations versionadas (geradas por prisma migrate dev)
 src/
 ├── config/database.js     # singleton do Prisma Client
-├── controllers/           # traduz HTTP ↔ service (sem regra de negócio)
-├── services/              # TODA a regra de negócio
+├── controllers/           # traduz HTTP ↔ service — renderiza views (res.render) e redireciona (PRG)
+├── services/               # TODA a regra de negócio (intacta desde o Cap. 5)
 ├── repositories/
 │   ├── contratos/         # IEntregasRepository e IMotoristasRepository (JSDoc)
-│   ├── *.repository.prisma.js  # implementação com Prisma (em uso)
+│   ├── *.repository.prisma.js  # implementação com Prisma (em uso, intacta desde o Cap. 5)
 │   └── *.repository.js    # implementação em memória (Cap. 4)
-├── database/              # banco em memória usado pelos repositories do Cap. 4
-├── routes/                # composition root (injeção) + monta em /api
+├── database/               # banco em memória usado pelos repositories do Cap. 4
+├── middlewares/            # validação (express-validator) e tratamento de erros/404 (HTML)
+├── routes/                 # composition root (injeção) + monta as rotas em /
+├── views/                  # EJS — layout, partials e telas
+│   ├── layouts/base.ejs    # layout único (express-ejs-layouts)
+│   ├── partials/           # navbar, flash, footer
+│   ├── entregas/           # listagem, nova, detalhe
+│   ├── motoristas/         # listagem, novo, detalhe
+│   └── erros/              # 404 e página de erro genérica
 └── utils/
 ```
 
 - **Regra de negócio só no Service.** Injeção de dependência no **composition root** (`src/routes`).
+- **Controllers não fazem mais `res.json()`** (exceto `GET /api/health`) — toda resposta é uma
+  view renderizada (`res.render`) ou um redirect (PRG).
 - O `server.js` só configura o app (já traz o `GET /api/health` exigido — não remova).
 
 ## Etapas (ver os enunciados completos)
 
-- **Atividade 05 — Entregas em camadas:** CRUD de `/api/entregas`, ciclo de status
-  (`CRIADA → EM_TRANSITO → ENTREGUE`/`CANCELADA`), histórico. Meta: checagens de **Entregas** verdes.
-- **Atividade 06 — Motoristas + Contratos + DI:** `/api/motoristas`, atribuição de motorista,
-  contratos de repository (JSDoc) e composição num ponto único. Meta: **122/122**.
+- **Atividade 05 — Entregas em camadas:** CRUD de entregas, ciclo de status
+  (`CRIADA → EM_TRANSITO → ENTREGUE`/`CANCELADA`), histórico.
+- **Atividade 06 — Motoristas + Contratos + DI:** motoristas, atribuição, contratos de
+  repository (JSDoc) e composição num ponto único.
 - **Atividade 07 — Persistência com Prisma (SQLite):** repositories Prisma no mesmo contrato,
   schema + migrations versionadas; os dados sobrevivem ao reinício. Services e controllers intactos.
+- **Atividade 08 — Interface Web com SSR (EJS):** controllers passam a `res.render()` + PRG,
+  views EJS (layout + partials), validação com `express-validator` reexibindo o form com erros,
+  mensagens flash e `method-override` para disparar PATCH a partir de `<form>` HTML.
 
 > O critério de **inversão de dependência** é verificado pelo professor **trocando o repository por
 > um Mock** que respeita o contrato — programe contra o contrato desde o início.
 
-## Rotas
+## Rotas (SSR)
 
-| Método | Rota | Corpo | Sucesso | Erros |
-|---|---|---|---|---|
-| GET | `/api/health` | — | `200` `{ status: "ok" }` | — |
-| POST | `/api/entregas` | `{ descricao, origem, destino }` | `201` entrega (`CRIADA`) | `400` · `409` duplicada |
-| GET | `/api/entregas?status=` | — | `200` array | — |
-| GET | `/api/entregas/:id` | — | `200` entrega | `404` |
-| PATCH | `/api/entregas/:id/avancar` | — | `200` entrega | `404` · `422` |
-| PATCH | `/api/entregas/:id/cancelar` | — | `200` entrega | `404` · `422` |
-| GET | `/api/entregas/:id/historico` | — | `200` array de eventos | `404` |
-| PATCH | `/api/entregas/:id/atribuir` | `{ motoristaId }` | `200` entrega (com `motoristaId`) | `400` · `404` · `422` entrega não-`CRIADA` ou motorista `INATIVO` |
-| POST | `/api/motoristas` | `{ nome, cpf, placaVeiculo? }` | `201` motorista (`ATIVO`) | `400` · `409` CPF duplicado |
-| GET | `/api/motoristas` | — | `200` array | — |
-| GET | `/api/motoristas/:id` | — | `200` motorista | `404` |
-| GET | `/api/motoristas/:id/entregas?status=` | — | `200` só as entregas do motorista (filtro combinável) | `404` |
+| Método | Rota | Comportamento |
+|---|---|---|
+| GET | `/` | Redireciona para `/entregas` |
+| GET | `/entregas` | Listagem (tabela) + link "Nova Entrega" + filtro por `?status=` |
+| GET | `/entregas/nova` | Formulário (`descricao`, `origem`, `destino`) |
+| POST | `/entregas` | Cria e redireciona (PRG). Inválido → reexibe o form (`400`) com erros e dados digitados |
+| GET | `/entregas/:id` | Detalhe: status, histórico e motorista atribuído. Inexistente → página `404` |
+| PATCH | `/entregas/:id/avancar` | Avança o status e redireciona |
+| PATCH | `/entregas/:id/cancelar` | Cancela e redireciona |
+| PATCH | `/entregas/:id/atribuir` | Recebe `motoristaId` (de um `<select>`) e redireciona |
+| GET | `/motoristas` | Listagem |
+| GET | `/motoristas/novo` | Formulário (`nome`, `cpf`, `placaVeiculo`) |
+| POST | `/motoristas` | Cria e redireciona. CPF duplicado → reexibe o form com erro |
+| GET | `/api/health` | `200` `{ "status": "ok" }` (readiness, não removido) |
+
+As ações de estado (`avancar`, `cancelar`, `atribuir`) são `PATCH`. Como um `<form>` HTML só
+envia `GET`/`POST`, o form faz `POST .../avancar?_method=PATCH` e o `method-override` traduz
+isso para `router.patch(...)`.
+
+## Views e SSR
+
+- **Layout único** (`views/layouts/base.ejs`, via `express-ejs-layouts`) com os partials
+  `navbar` e `flash` incluídos em toda página.
+- **PRG (Post-Redirect-Get):** toda escrita bem-sucedida responde com redirect — nunca HTML
+  direto no mesmo `POST`/`PATCH`.
+- **Flash (`connect-flash`):** mensagens de sucesso/erro aparecem na página seguinte ao
+  redirect, lidas uma única vez da sessão.
+- **Validação (`express-validator`):** formulário inválido é reexibido com as mensagens de
+  erro e com os dados já digitados, sempre com status `4xx` (nunca `5xx`).
+- **Erros:** entrega/motorista inexistente renderiza uma página `404` em HTML; qualquer outro
+  erro não tratado cai numa página de erro genérica (nunca JSON ou stack trace).
 
 ## Banco de dados (Prisma + SQLite)
 
@@ -117,9 +152,10 @@ mesmo contrato. Só os repositories acessam o Prisma Client.
                   │                                         │
                   ▼                                         ▼
           EntregasController                      MotoristasController
+           (res.render + redirect)                 (res.render + redirect)
                   │                                         │
                   ▼                                         ▼
-            /api/entregas                            /api/motoristas
+              /entregas                                /motoristas
 ```
 
 A regra "motorista `INATIVO` não pode ser atribuído" fica no `EntregasService`, pois é
@@ -136,11 +172,11 @@ npm run docs        # TypeDoc — entende a sintaxe de tipos do TypeScript usada
 
 ## Contrato (resumo)
 
-- Base `/api` · JSON · erro `{ "erro": "..." }` · `GET /api/health` → `{ "status": "ok" }`.
-- Status: `201` criar · `400` entrada inválida · `404` não encontrado · `409` unicidade
-  (duplicata/CPF) · `422` regra de estado (transição/atribuição inválida).
+- Interface web (SSR, EJS) em `/entregas` e `/motoristas` · `GET /api/health` → `{ "status": "ok" }`.
+- Toda escrita bem-sucedida responde com redirect (PRG); formulário inválido reexibe o form
+  com status `4xx`; entidade inexistente renderiza página `404`.
 - Execução: `npm start`, respeita `process.env.PORT`, branch `main`.
 - Banco: `DATABASE_URL="file:./dev.db"` no `.env` (forneça `.env.example`).
 
-Faça **um commit por avanço** (Conventional Commits, ex.: `feat(entregas): valida origem ≠ destino`).
+Faça **um commit por avanço** (Conventional Commits, ex.: `feat(entregas): aplica PRG na criação`).
 Bom trabalho! 🚀
