@@ -22,7 +22,7 @@ export class EntregaController {
         try {
             const novaEntrega = await this.service.criar(req.body);
             req.flash('sucesso', 'Entrega criada com sucesso.');
-            res.redirect(`/entregas/${novaEntrega.id}`);
+            res.redirect(`/entregas`);
         } catch (err) {
             if (err instanceof AppError) {
                 return res.status(err.statusCode).render('entregas/nova', {
