@@ -48,8 +48,7 @@ app.use(express.static(join(__dirname, '..', 'public'))); // arquivos estáticos
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 
 // Rotas da API e injeção de dependências
-app.get('/', (req, res) => res.redirect('/api/entregas'));
-app.use('/api', criarRotas());
+app.use('/', criarRotas());
 
 // Tratamento de erros
 app.use(naoEncontrado);
