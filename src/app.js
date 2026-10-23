@@ -34,8 +34,10 @@ app.use(methodOverride('_method'));
 app.use(session({ secret: 'dev-secret', resave: false, saveUninitialized: false }));
 app.use(flash());
 app.use((req, res, next) => {
-  res.locals.sucesso = req.flash('sucesso');
-  res.locals.erro = req.flash('erro');
+  res.locals.flash = {
+    sucesso: req.flash('sucesso'),
+    erro: req.flash('erro')
+  };
   next();
 });
 

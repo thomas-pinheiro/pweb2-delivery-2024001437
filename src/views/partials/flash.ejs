@@ -1,11 +1,11 @@
-<% if (typeof sucesso !== 'undefined' && sucesso.length) { %>
-    <% sucesso.forEach((msg) => { %>
-        <div class="flash flash-sucesso" role="status"><%= msg %></div>
-    <% }) %>
+<% if (flash.sucesso && flash.sucesso.length > 0) { %>
+  <div class="alert alert-success">
+    <% flash.sucesso.forEach(msg => { %><p><%= msg %></p><% }); %>
+  </div>
 <% } %>
 
-<% if (typeof erro !== 'undefined' && erro.length) { %>
-    <% erro.forEach((msg) => { %>
-        <div class="flash flash-erro" role="alert"><%= msg %></div>
-    <% }) %>
+<% if (flash.erro && flash.erro.length > 0) { %>
+  <div class="alert alert-error">
+    <% flash.erro.forEach(msg => { %><p><%= msg %></p><% }); %>
+  </div>
 <% } %>
