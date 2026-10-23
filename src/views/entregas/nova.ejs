@@ -8,15 +8,15 @@
     <form action="/entregas" method="POST">
         <div class="form-group">
             <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" name="descricao" required>
+            <input type="text" id="descricao" name="descricao" value="<%= dados.descricao %>" required>
         </div>
         <div class="form-group">
             <label for="origem">Endereço:</label>
-            <input type="text" id="origem" name="origem" required>
+            <input type="text" id="origem" name="origem" value="<%= dados.origem %>" required>
         </div>
         <div class="form-group">
             <label for="destino">Destino:</label>
-            <input type="text" id="destino" name="destino" required>
+            <input type="text" id="destino" name="destino" value="<%= dados.destino %>" required>
         </div>
         <button type="submit" class="btn btn-primary">Criar Entrega</button>
     </form>
