@@ -16,7 +16,7 @@ export class EntregaController {
     };
 
     async novaEntregaForm(req, res, next) {
-        res.render('entregas/nova', { title: 'Nova Entrega', dados: {}, erros: [] });
+        res.render('entregas/nova', { titulo: 'Nova Entrega', dados: {}, erros: [] });
     };
 
     async criar(req, res, next) {
@@ -40,7 +40,7 @@ export class EntregaController {
         try {
             const { status } = req.query;
             const entregas = await this.service.listarTodos({ status });
-            res.render('entregas/listagem', { title: 'Entregas', entregas });
+            res.render('entregas/listagem', { titulo: 'Entregas', entregas, statusFiltro: status || '' });
         } catch (err) {
             next(err);
         }
