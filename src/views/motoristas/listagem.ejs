@@ -9,6 +9,7 @@
   <table class="table">
     <thead>
       <tr>
+        <th>ID</th>
         <th>Nome</th>
         <th>CPF</th>
         <th>Placa do Veículo</th>
@@ -18,6 +19,7 @@
     <tbody>
       <% motoristas.forEach(e => { %>
         <tr>
+          <td><%= e.id %></td>
           <td><%= e.nome %></td>
           <td><%= e.cpf %></td>
           <td><%= e.placaVeiculo || 'Não informada' %></td>
