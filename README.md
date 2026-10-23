@@ -23,10 +23,6 @@ npm start
 npm run check        # = BASE_URL=http://localhost:3000 node autograder/check.mjs
 ```
 
-## Print da tela de entregas
-
-![Tela de listagem de entregas](./screenshots/entregas.png)
-
 ## Estrutura
 
 ```
