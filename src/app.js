@@ -39,7 +39,8 @@ app.use((req, res, next) => {
   next();
 });
 
-// app.use(express.json()); retirei pois nao é mais usado
+app.use(express.json());
+app.use(express.static(join(__dirname, '..', 'public'))); // arquivos estáticos
 
 // Health check exigido pelo contrato de execução (não remova).
 app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
@@ -52,6 +53,6 @@ app.use('/api', criarRotas());
 app.use(middlewareDeErros);
 
 // 404 para rotas não mapeadas (mantenha por último, antes do listen).
-app.use((req, res) => res.status(404).render('erro', { codigo: 404, mensagem: 'Página não encontrada' }));
+app.use((req, res) => res.status(404).render('erros/erro', { titulo: 'Página não encontrada', mensagem: 'A página que você está procurando não existe.' }));
 
 export default app;

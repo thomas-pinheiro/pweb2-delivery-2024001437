@@ -1,0 +1,42 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { font-family: system-ui, sans-serif; color: #1a1a2e; background: #f8f9fa; }
+
+.container  { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+.navbar     { background: #2563eb; padding: 1rem 2rem; display: flex; align-items: center; gap: 2rem; }
+.navbar a   { color: #fff; text-decoration: none; font-weight: 500; }
+
+.btn              { display: inline-block; padding: .5rem 1.25rem; border-radius: 6px;
+                    font-size: .9rem; cursor: pointer; border: none; text-decoration: none; }
+.btn-primary      { background: #2563eb; color: #fff; }
+.btn-secondary    { background: #e5e7eb; color: #374151; }
+.btn-danger       { background: #dc2626; color: #fff; }
+.btn-link         { background: none; color: #2563eb; padding: 0; }
+
+.form-container   { max-width: 480px; }
+.form-group       { margin-bottom: 1.25rem; }
+.form-group label { display: block; margin-bottom: .4rem; font-weight: 500; font-size: .9rem; }
+.form-group input { width: 100%; padding: .6rem .8rem; border: 1px solid #d1d5db;
+                    border-radius: 6px; font-size: 1rem; }
+.form-group.has-error input { border-color: #dc2626; }
+.form-actions     { display: flex; gap: .75rem; margin-top: 1.5rem; }
+
+.alert            { padding: .75rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
+.alert-success    { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+.alert-error      { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+.table            { width: 100%; border-collapse: collapse; }
+.table th, .table td { padding: .75rem 1rem; text-align: left;
+                       border-bottom: 1px solid #e5e7eb; }
+.table th         { background: #f9fafb; font-weight: 600; font-size: .85rem; }
+
+.page-header      { display: flex; justify-content: space-between; align-items: center;
+                    margin-bottom: 1.5rem; }
+.card             { background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 1.5rem; }
+.card-header      { display: flex; justify-content: space-between; align-items: flex-start;
+                    margin-bottom: 1rem; }
+.details          { display: grid; grid-template-columns: auto 1fr; gap: .5rem 1.5rem; }
+.details dt       { font-weight: 600; color: #6b7280; font-size: .85rem; }
+
+.footer           { text-align: center; padding: 2rem; color: #9ca3af; font-size: .85rem;
+                    border-top: 1px solid #e5e7eb; margin-top: 3rem; }
